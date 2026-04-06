@@ -1,0 +1,5 @@
+ID,Text,Comment
+Calloatti.BeaversForReal.KeyBindingGroup,"Beavers For Real",
+Calloatti.BeaversForReal.KeyBind.Toggle,"Toggle debug navmesh",
+Calloatti.BeaversForReal.DebugOn,"Beavers For Real Debug ON",
+Calloatti.BeaversForReal.DebugOff,"Beavers For Real Debug OFF",

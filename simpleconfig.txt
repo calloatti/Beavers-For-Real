@@ -1,0 +1,15 @@
+ConfigFileName = "BeaversForReal.txt"
+
+Key = "MaxWaterNavigationHeight"
+Type = "float"
+DefaultValue = 0.5
+Label = "Max Water Navigation Height"
+Tooltip = "The maximum height difference beavers can navigate from land to water and back."
+ControlType = "Slider"
+MinValue = 0.0
+MaxValue = 1.0
+Step = 0.1
+Options = []
+AvailableIn = ["MainMenu", "Game"]
+RequiresRestart = false
+RequiresReload = false
