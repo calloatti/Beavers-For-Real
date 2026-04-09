@@ -1,3 +1,5 @@
+1.2.0
+Lowered edge cost from 1.5 to 1.0 so edges expand DC range
 1.1.0
 Local updates instead of nuking the whole map
 Swimming animation patch to try to keep the beavers on the surface

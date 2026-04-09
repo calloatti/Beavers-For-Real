@@ -27,6 +27,7 @@ namespace Calloatti.BeaversForReal
     private readonly BVRInputService _debugInputService;
     private readonly QuickNotificationService _quickNotificationService;
     private readonly ILoc _loc;
+    private readonly EventBus _eventBus;
 
     private readonly List<BVRShorelineEdge> _shorelines = new List<BVRShorelineEdge>();
     private readonly HashSet<Vector2Int> _invalidatedCells = new HashSet<Vector2Int>();
@@ -49,7 +50,8 @@ namespace Calloatti.BeaversForReal
       EntityComponentRegistry entityComponentRegistry,
       BVRInputService debugInputService,
       QuickNotificationService quickNotificationService,
-      ILoc loc)
+      ILoc loc,
+      EventBus eventBus)
     {
       _terrainService = terrainService;
       _navMeshService = navMeshService;
@@ -61,6 +63,7 @@ namespace Calloatti.BeaversForReal
       _debugInputService = debugInputService;
       _quickNotificationService = quickNotificationService;
       _loc = loc;
+      _eventBus = eventBus;
     }
 
     public void Load()
@@ -74,6 +77,8 @@ namespace Calloatti.BeaversForReal
 
       _debugInputService.OnToggleDebug += ToggleDebug;
 
+      _eventBus.Register(this);
+
       RescanMap();
       _terrainService.TerrainHeightChanged += OnMapChanged;
     }
@@ -83,6 +88,7 @@ namespace Calloatti.BeaversForReal
       ClearActiveEdges();
       if (_terrainService != null) _terrainService.TerrainHeightChanged -= OnMapChanged;
       if (_debugInputService != null) _debugInputService.OnToggleDebug -= ToggleDebug;
+      if (_eventBus != null) _eventBus.Unregister(this);
       if (_visualizer != null) UnityEngine.Object.Destroy(_visualizer.gameObject);
     }
 
@@ -95,18 +101,42 @@ namespace Calloatti.BeaversForReal
 
     private void OnMapChanged(object sender, TerrainHeightChangeEventArgs e)
     {
-      Vector2Int center = e.Change.Coordinates;
+      _invalidatedCells.Add(e.Change.Coordinates);
+      _needsRescan = true;
+      _rescanCooldown = DebounceTime;
+    }
 
-      for (int dx = -1; dx <= 1; dx++)
+    [OnEvent]
+    public void OnBlockFinished(EnteredFinishedStateEvent e)
+    {
+      InvalidateBlockObject(e.BlockObject);
+    }
+
+    [OnEvent]
+    public void OnBlockUnfinished(ExitedFinishedStateEvent e)
+    {
+      InvalidateBlockObject(e.BlockObject);
+    }
+
+    [OnEvent]
+    public void OnBlockSet(BlockObjectSetEvent e)
+    {
+      InvalidateBlockObject(e.BlockObject);
+    }
+
+    [OnEvent]
+    public void OnBlockUnset(BlockObjectUnsetEvent e)
+    {
+      InvalidateBlockObject(e.BlockObject);
+    }
+
+    private void InvalidateBlockObject(BlockObject blockObject)
+    {
+      if (blockObject == null || blockObject.PositionedBlocks == null) return;
+
+      foreach (var coords in blockObject.PositionedBlocks.GetAllCoordinates())
       {
-        for (int dy = -1; dy <= 1; dy++)
-        {
-          Vector2Int cell = new Vector2Int(center.x + dx, center.y + dy);
-          if (_terrainService.Contains(cell))
-          {
-            _invalidatedCells.Add(cell);
-          }
-        }
+        _invalidatedCells.Add(new Vector2Int(coords.x, coords.y));
       }
 
       _needsRescan = true;
@@ -169,9 +199,30 @@ namespace Calloatti.BeaversForReal
       }
 
       HashSet<long> processedHashes = new HashSet<long>();
-      Vector3Int[] orthogonalDeltas = { new Vector3Int(1, 0, 0), new Vector3Int(-1, 0, 0), new Vector3Int(0, 1, 0), new Vector3Int(0, -1, 0) };
+      foreach (var edge in _shorelines)
+      {
+        long hash = (((long)edge.Upper.x & 0x3FF) << 50) | (((long)edge.Upper.y & 0x3FF) << 40) | (((long)edge.Upper.z & 0x3FF) << 30) | (((long)edge.Lower.x & 0x3FF) << 20) | (((long)edge.Lower.y & 0x3FF) << 10) | ((long)edge.Lower.z & 0x3FF);
+        processedHashes.Add(hash);
+      }
 
+      HashSet<Vector2Int> cellsToScan = new HashSet<Vector2Int>();
       foreach (Vector2Int cell in _invalidatedCells)
+      {
+        for (int dx = -1; dx <= 1; dx++)
+        {
+          for (int dy = -1; dy <= 1; dy++)
+          {
+            Vector2Int neighborCell = new Vector2Int(cell.x + dx, cell.y + dy);
+            if (_terrainService.Contains(neighborCell))
+            {
+              cellsToScan.Add(neighborCell);
+            }
+          }
+        }
+      }
+
+      Vector3Int[] orthogonalDeltas = { new Vector3Int(1, 0, 0), new Vector3Int(-1, 0, 0), new Vector3Int(0, 1, 0), new Vector3Int(0, -1, 0) };
+      foreach (Vector2Int cell in cellsToScan)
       {
         foreach (Vector3Int terrainLedge in _terrainService.GetAllHeightsInCell(cell))
         {
@@ -180,7 +231,7 @@ namespace Calloatti.BeaversForReal
       }
 
       _invalidatedCells.Clear();
-      _currentEdgeIndex = 0;
+      // Notice we are NOT resetting _currentEdgeIndex = 0 here anymore!
     }
 
     private void FindAndAddLedges(Vector3Int upper, Vector3Int[] deltas, HashSet<long> hashes)
@@ -220,8 +271,10 @@ namespace Calloatti.BeaversForReal
           _needsRescan = false;
           UpdateInvalidatedCells();
         }
-        return;
+        // I have removed the 'return;' statement here!
+        // Edge processing will continue uninterrupted while waiting for the cooldown.
       }
+
       if (_shorelines.Count == 0) return;
 
       int processed = 0;
@@ -295,8 +348,8 @@ namespace Calloatti.BeaversForReal
       if (shouldBeActive && !s.IsActive)
       {
         s.IsActive = true;
-        s.EdgeDown = NavMeshEdge.CreateGrouped(s.Upper, s.Lower, ShorelineGroupId, false, 1.5f);
-        s.EdgeUp = NavMeshEdge.CreateGrouped(s.Lower, s.Upper, ShorelineGroupId, false, 1.5f);
+        s.EdgeDown = NavMeshEdge.CreateGrouped(s.Upper, s.Lower, ShorelineGroupId, false, 1.0f);
+        s.EdgeUp = NavMeshEdge.CreateGrouped(s.Lower, s.Upper, ShorelineGroupId, false, 1.0f);
         _navMeshService.AddEdge(s.EdgeDown);
         _navMeshService.AddEdge(s.EdgeUp);
       }
