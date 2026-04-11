@@ -8,8 +8,8 @@ namespace Calloatti.BeaversForReal
   {
     protected override void Configure()
     {
-      Bind<BVRShorelineManager>().AsSingleton();
-      Bind<BVRInputService>().AsSingleton();
+      Bind<BARManager>().AsSingleton();
+      Bind<BARInputService>().AsSingleton();
     }
   }
 }

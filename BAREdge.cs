@@ -3,18 +3,22 @@ using UnityEngine;
 
 namespace Calloatti.BeaversForReal
 {
-  public class BVRShorelineEdge
+  public class BAREdge
   {
+    public int UpperNodeId;
     public Vector3Int Upper;
+    public int LowerNodeId;
     public Vector3Int Lower;
-    public bool IsActive;
-    public bool IsBlockedByBuilding;
+
+    public bool IsBlockedByWater;
     public NavMeshEdge EdgeDown;
     public NavMeshEdge EdgeUp;
 
-    public BVRShorelineEdge(Vector3Int upper, Vector3Int lower)
+    public BAREdge(int upperNodeId, Vector3Int upper, int lowerNodeId, Vector3Int lower)
     {
+      UpperNodeId = upperNodeId;
       Upper = upper;
+      LowerNodeId = lowerNodeId;
       Lower = lower;
     }
   }
