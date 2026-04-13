@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Calloatti.BeaversForReal
 {
-  public partial class BARManager
+  public partial class BFRManager
   {
     public void UpdateSingleton()
     {
@@ -29,7 +29,7 @@ namespace Calloatti.BeaversForReal
       }
     }
 
-    private void ProcessWaterLevel(BAREdge s)
+    private void ProcessWaterLevel(BFREdge s)
     {
       float depth = _waterMap.WaterDepth(s.Lower);
       float zDiff = s.Upper.z - (s.Lower.z + depth);

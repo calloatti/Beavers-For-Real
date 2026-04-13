@@ -6,9 +6,9 @@ using UnityEngine;
 namespace Calloatti.BeaversForReal
 {
   // 1. The Custom Renderer (MonoBehaviour)
-  public class BARNavMeshRenderer : MonoBehaviour
+  public class BFRNavMeshRenderer : MonoBehaviour
   {
-    public static BARNavMeshRenderer Instance;
+    public static BFRNavMeshRenderer Instance;
 
     private Material _mat;
     private Material _matGreen;
@@ -138,14 +138,14 @@ namespace Calloatti.BeaversForReal
     public static bool Prefix(NavMeshDrawer __instance, Vector3Int coordinates)
     {
       // Ensure our renderer exists in the scene
-      if (BARNavMeshRenderer.Instance == null)
+      if (BFRNavMeshRenderer.Instance == null)
       {
-        GameObject go = new GameObject("BARNavMeshRenderer");
-        go.AddComponent<BARNavMeshRenderer>();
+        GameObject go = new GameObject("BFRNavMeshRenderer");
+        go.AddComponent<BFRNavMeshRenderer>();
       }
 
       // Intercept the vanilla call and send the data to our GL renderer
-      BARNavMeshRenderer.Instance.QueueDrawRequest(__instance, coordinates);
+      BFRNavMeshRenderer.Instance.QueueDrawRequest(__instance, coordinates);
 
       // Return false to skip the vanilla method entirely (preventing useless Debug.Draw calls)
       return false;

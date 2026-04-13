@@ -10,7 +10,7 @@ using UnityEngine;
 namespace Calloatti.BeaversForReal
 {
   [HarmonyPatch(typeof(SwimmingAnimator))]
-  public static class BARSwimmingPatch
+  public static class BFRSwimmingPatch
   {
     [HarmonyPatch("SmoothOffset")]
     [HarmonyPostfix]
@@ -28,7 +28,7 @@ namespace Calloatti.BeaversForReal
   }
 
   [HarmonyPatch(typeof(NavMeshSourceNode))]
-  public static class BARUnblockEdgePatch
+  public static class BFRUnblockEdgePatch
   {
     private static int GetBlockageKey(int nodeId, int groupId) => (nodeId * 397) ^ groupId;
 
@@ -47,7 +47,7 @@ namespace Calloatti.BeaversForReal
   }
 
   [HarmonyPatch(typeof(CitizenUnstucker), nameof(CitizenUnstucker.TryUnstuckAndKeepDistrict))]
-  public static class BARStuckPatch
+  public static class BFRStuckPatch
   {
     public static void Postfix(Citizen citizen, DistrictCenter preferredDistrict, ref bool __result)
     {
@@ -71,6 +71,13 @@ namespace Calloatti.BeaversForReal
             {
               citizen.Transform.position = checkWorld;
               citizen.GetComponent<CharacterModel>().Position = checkWorld;
+
+              // Force the navigation AI to cleanly cancel its current route and recalculate
+              Walker walker = citizen.GetComponent<Walker>();
+              if (walker != null)
+              {
+                walker.StopNextTick();
+              }
 
               //Debug.Log($"[BeaversForReal] Successfully unstuck citizen! Teleported from {gridPos} to {checkGrid}.");
 

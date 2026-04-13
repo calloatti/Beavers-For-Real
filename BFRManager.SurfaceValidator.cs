@@ -2,7 +2,7 @@
 
 namespace Calloatti.BeaversForReal
 {
-  public partial class BARManager
+  public partial class BFRManager
   {
     private bool IsStandableSurface(Vector3Int airCoords)
     {

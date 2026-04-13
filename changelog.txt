@@ -1,3 +1,5 @@
+2.0.1
+Added walker.StopNextTick to stuck patch
 2.0.0
 Complete mod rewrite,stuck beavers fixed
 1.2.0

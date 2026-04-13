@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Calloatti.BeaversForReal
 {
-  public partial class BARManager
+  public partial class BFRManager
   {
     private void ProcessAndAddEdges()
     {
@@ -106,7 +106,7 @@ namespace Calloatti.BeaversForReal
           if (_shorelineDict.ContainsKey(hash)) continue;
 
           // Create the edge unblocked for testing
-          var newEdge = new BAREdge(upperNodeId, upper, lowerNodeId, lower) { IsBlockedByWater = false };
+          var newEdge = new BFREdge(upperNodeId, upper, lowerNodeId, lower) { IsBlockedByWater = false };
 
           if (IsLedgePhysicallyValid(newEdge))
           {
@@ -123,7 +123,7 @@ namespace Calloatti.BeaversForReal
       }
     }
 
-    private bool IsLedgePhysicallyValid(BAREdge edge)
+    private bool IsLedgePhysicallyValid(BFREdge edge)
     {
       // Check the air gap between the ledge and the landing spot for solid obstructions
       for (int z = edge.Upper.z; z > edge.Lower.z; z--)

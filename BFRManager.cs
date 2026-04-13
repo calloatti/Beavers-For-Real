@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace Calloatti.BeaversForReal
 {
-  public partial class BARManager : ILoadableSingleton, IPostLoadableSingleton, IUpdatableSingleton, IDisposable
+  public partial class BFRManager : ILoadableSingleton, IPostLoadableSingleton, IUpdatableSingleton, IDisposable
   {
     public bool DebugEnabled = false;
     public static int ShorelineGroupId { get; private set; } = -1;
@@ -21,7 +21,7 @@ namespace Calloatti.BeaversForReal
     private readonly ITerrainService _terrainService;
     private readonly INavMeshService _navMeshService;
     private readonly NavMeshGroupService _navMeshGroupService;
-    private readonly BARInputService _debugInputService;
+    private readonly BFRInputService _debugInputService;
     private readonly IBlockService _blockService;
     private readonly TerrainNavMeshGraph _terrainNavMeshGraph;
     private readonly RestrictedNodeMap _restrictedNodeMap;
@@ -31,16 +31,16 @@ namespace Calloatti.BeaversForReal
     // FIX 1: Explicitly declare the _waterMap variable
     private readonly IThreadSafeWaterMap _waterMap;
 
-    private readonly List<BAREdge> _shorelines = new List<BAREdge>();
-    private readonly Dictionary<long, BAREdge> _shorelineDict = new Dictionary<long, BAREdge>();
-    private BARMeshRenderer _visualizer;
+    private readonly List<BFREdge> _shorelines = new List<BFREdge>();
+    private readonly Dictionary<long, BFREdge> _shorelineDict = new Dictionary<long, BFREdge>();
+    private BFRMeshRenderer _visualizer;
 
     private readonly Vector3Int[] _cardinalDeltas = {
       new Vector3Int(1, 0, 0), new Vector3Int(-1, 0, 0), new Vector3Int(0, 1, 0), new Vector3Int(0, -1, 0)
     };
 
     // FIX 2: Completely removed EventBus from the parameters so it stops throwing errors
-    public BARManager(ITerrainService ts, INavMeshService nms, NavMeshGroupService nmgs, IThreadSafeWaterMap wm, BARInputService dis, QuickNotificationService qns, ILoc loc, IBlockService bs, TerrainNavMeshGraph tng, RestrictedNodeMap rnm, NodeIdService nis, StackableBlockService sbs)
+    public BFRManager(ITerrainService ts, INavMeshService nms, NavMeshGroupService nmgs, IThreadSafeWaterMap wm, BFRInputService dis, QuickNotificationService qns, ILoc loc, IBlockService bs, TerrainNavMeshGraph tng, RestrictedNodeMap rnm, NodeIdService nis, StackableBlockService sbs)
     {
       _terrainService = ts;
       _navMeshService = nms;
@@ -62,7 +62,7 @@ namespace Calloatti.BeaversForReal
     {
       ShorelineGroupId = _navMeshGroupService.GetOrAddGroupId("Calloatti.BeaversForReal");
       GameObject visualizerObj = new GameObject("BeaversForReal_Visualizer");
-      _visualizer = visualizerObj.AddComponent<BARMeshRenderer>();
+      _visualizer = visualizerObj.AddComponent<BFRMeshRenderer>();
       _visualizer.Manager = this;
       _visualizer.Shorelines = _shorelines;
 

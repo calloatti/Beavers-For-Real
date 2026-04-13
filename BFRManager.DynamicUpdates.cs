@@ -8,9 +8,9 @@ using UnityEngine;
 
 namespace Calloatti.BeaversForReal
 {
-  public partial class BARManager
+  public partial class BFRManager
   {
-    private static BARManager _instance;
+    private static BFRManager _instance;
     private static bool _dynamicUpdatesEnabled = false;
     private static bool _processRegularChangesFirstRun = true;
     private static readonly HashSet<Vector3Int> _pendingUpdateCoordinates = new HashSet<Vector3Int>();
@@ -22,7 +22,7 @@ namespace Calloatti.BeaversForReal
       _processRegularChangesFirstRun = true;
     }
 
-    public void SetInstance(BARManager instance) => _instance = instance;
+    public void SetInstance(BFRManager instance) => _instance = instance;
 
     [HarmonyPatch(typeof(NavigationSynchronizer), "ProcessRegularChanges")]
     private static class ProcessRegularChangesPatch
@@ -80,7 +80,7 @@ namespace Calloatti.BeaversForReal
       int searchMinX = minX - 1; int searchMaxX = maxX + 1;
       int searchMinY = minY - 1; int searchMaxY = maxY + 1;
 
-      Dictionary<long, BAREdge> ThisEdgesAreOk = new Dictionary<long, BAREdge>();
+      Dictionary<long, BFREdge> ThisEdgesAreOk = new Dictionary<long, BFREdge>();
       int maxNodes = _nodeIdService.NumberOfNodes;
       bool[] isStandable = new bool[maxNodes];
       List<int> potentialLedges = new List<int>();
@@ -171,7 +171,7 @@ namespace Calloatti.BeaversForReal
             if (isStandable[checkId])
             {
               long hash = GetHash(upper, checkCoords);
-              var candidate = new BAREdge(upperNodeId, upper, checkId, checkCoords) { IsBlockedByWater = false };
+              var candidate = new BFREdge(upperNodeId, upper, checkId, checkCoords) { IsBlockedByWater = false };
               if (IsLedgePhysicallyValid(candidate))
               {
                 if (_shorelineDict.TryGetValue(hash, out var existing))

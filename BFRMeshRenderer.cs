@@ -4,14 +4,14 @@ using UnityEngine;
 
 namespace Calloatti.BeaversForReal
 {
-  public class BARMeshRenderer : MonoBehaviour
+  public class BFRMeshRenderer : MonoBehaviour
   {
-    public BARManager Manager;
+    public BFRManager Manager;
     private Material _matLine;
     private Material _matGreen;
     private Material _matRed;
     private Mesh _sphereMesh;
-    public List<BAREdge> Shorelines;
+    public List<BFREdge> Shorelines;
 
     void Awake()
     {

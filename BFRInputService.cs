@@ -5,14 +5,14 @@ using Timberborn.SingletonSystem;
 
 namespace Calloatti.BeaversForReal
 {
-  public class BARInputService : ILoadableSingleton, IInputProcessor, IDisposable
+  public class BFRInputService : ILoadableSingleton, IInputProcessor, IDisposable
   {
     private readonly InputService _inputService;
 
     public event Action OnToggleDebug;
 
     [Inject]
-    public BARInputService(InputService inputService)
+    public BFRInputService(InputService inputService)
     {
       _inputService = inputService;
     }

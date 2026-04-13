@@ -9,16 +9,16 @@ The mod dynamically alters Timberborn's navigation mesh by creating custom "shor
 vertically between dry land (Upper) and underwater terrain (Lower) without requiring stairs, provided the water depth and 
 height differentials meet specific criteria. 
 
-- Initialization: BARManager registers a unique NavMesh Group ID ("Calloatti.BeaversForReal").
+- Initialization: BFRManager registers a unique NavMesh Group ID ("Calloatti.BeaversForReal").
 - Map Scanning: On load, it scans the entire map via _terrainService.GetAllHeightsInCell. It looks for adjacent Z-level 
 drops (ledges).
-- Edge Generation: When a valid ledge is found (not blocked by finished stackable blocks), it records a BAREdge.
+- Edge Generation: When a valid ledge is found (not blocked by finished stackable blocks), it records a BFREdge.
 - Validation & Injection: During the update loop, it checks if the upper/lower points are valid NavMesh nodes, if the 
 vertical gap is within the configured `MaxWaterNavigationHeight`, and if water depth > 0.1f. If valid, it injects two 
 directional NavMeshEdge objects (EdgeUp, EdgeDown) directly into the _navMeshService.
-- Swimming Animation: BARSwimmingPatch (Harmony Postfix) overrides the `SmoothOffset` calculation in vanilla's 
+- Swimming Animation: BFRSwimmingPatch (Harmony Postfix) overrides the `SmoothOffset` calculation in vanilla's 
 `SwimmingAnimator` to prevent beavers from sinking to the lakebed, pinning their visual model near the water surface.
-- Vanilla Interference Prevention: BARPatches intercepts `NavMeshSource.BlockEdge` and `UnblockEdge`, explicitly ignoring 
+- Vanilla Interference Prevention: BFRPatches intercepts `NavMeshSource.BlockEdge` and `UnblockEdge`, explicitly ignoring 
 the mod's custom Group ID so the vanilla engine does not accidentally cull the custom shoreline edges.
 
 2. WHY PERFORMANCE IS NOT NEGATIVELY AFFECTED
@@ -47,16 +47,16 @@ lower nodes into a single 64-bit integer (`long hash = (((long)upper.x & 0x3FF) 
 HashSet<long> is a highly optimized O(1) operation that avoids object instantiation and garbage collection (GC) overhead.
 
 E. Debug Rendering Isolation
-The visualizer (`BARPathRenderer`) utilizes low-level OpenGL immediate mode drawing (`GL.Begin(GL.LINES)`) and 
+The visualizer (`BFRPathRenderer`) utilizes low-level OpenGL immediate mode drawing (`GL.Begin(GL.LINES)`) and 
 `Graphics.DrawMeshNow`. These instructions are gated behind an `if (!Manager.DebugEnabled)` guard clause. When debugging is
  toggled off, the render loop exits instantly, costing exactly zero draw calls.
  
 REFACTORED VERSION
 =============================================================================
-BAR SHORELINE MANAGER: DEEP-DIVE TECHNICAL ARCHITECTURE
+BFR SHORELINE MANAGER: DEEP-DIVE TECHNICAL ARCHITECTURE
 THE BOOTSTRAPPER (AddEdges.cs)
 
-When Timberborn loads a map, the dependency injection framework (Bindito) spawns the BARManager singleton. Because the game 
+When Timberborn loads a map, the dependency injection framework (Bindito) spawns the BFRManager singleton. Because the game 
 has no native concept of shoreline pathing, AddEdges.cs performs a brute-force sweep.
 
 It uses _nodeIdService.NumberOfNodes to iterate through every single node ID on the map and converts them to grid coordinates
@@ -126,7 +126,7 @@ For each ledge, we check its neighbors using _terrainNavMeshGraph.GetNeighbors()
 
 We skip connections that are already registered as our custom edges in _shorelineDict.
 
-We generate a candidate BAREdge and run it through your IsLedgePhysicallyValid() method. Because we are in the Postfix, this 
+We generate a candidate BFREdge and run it through your IsLedgePhysicallyValid() method. Because we are in the Postfix, this 
 method is evaluating against the completely updated, 100% accurate terrain and water states.
 
 Edges that pass are hashed and stored in ThisEdgesAreOk.
