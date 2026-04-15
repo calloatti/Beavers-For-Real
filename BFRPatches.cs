@@ -79,7 +79,10 @@ namespace Calloatti.BeaversForReal
                 walker.StopNextTick();
               }
 
-              //Debug.Log($"[BeaversForReal] Successfully unstuck citizen! Teleported from {gridPos} to {checkGrid}.");
+              if (ModStarter.Config.GetBool("LogUnstuckBeavers"))
+              {
+                Debug.Log($"[BeaversForReal] Successfully unstuck citizen! Teleported from {gridPos} to {checkGrid}.");
+              }
 
               __result = true;
               return;

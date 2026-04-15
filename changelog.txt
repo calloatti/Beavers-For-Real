@@ -1,3 +1,5 @@
+2.0.2
+Optional unstuck log added.
 2.0.1
 Added walker.StopNextTick to stuck patch
 2.0.0
