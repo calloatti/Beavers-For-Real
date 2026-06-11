@@ -412,6 +412,14 @@ namespace Calloatti.Config
       }
     }
 
+    public List<string> GetAllKeys()
+    {
+      lock (_lockObj)
+      {
+        return new List<string>(_settings.Keys);
+      }
+    }
+
     public string GetString(string key)
     {
       lock (_lockObj)
