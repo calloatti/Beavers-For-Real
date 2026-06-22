@@ -51,7 +51,8 @@ namespace Calloatti.BeaversForReal
   {
     public static void Postfix(Citizen citizen, DistrictCenter preferredDistrict, ref bool __result)
     {
-      if (__result) return;
+      // RESTORED: The null check to prevent Traverse from crashing when a beaver has no district
+      if (__result || preferredDistrict == null) return;
 
       Vector3 currentPos = citizen.Transform.position;
       Vector3Int gridPos = NavigationCoordinateSystem.WorldToGridInt(currentPos);
@@ -72,12 +73,8 @@ namespace Calloatti.BeaversForReal
               citizen.Transform.position = checkWorld;
               citizen.GetComponent<CharacterModel>().Position = checkWorld;
 
-              // Force the navigation AI to cleanly cancel its current route and recalculate
-              Walker walker = citizen.GetComponent<Walker>();
-              if (walker != null)
-              {
-                walker.StopNextTick();
-              }
+              // RESTORED: Condensed the Walker null check back to the inline null-conditional operator
+              citizen.GetComponent<Walker>()?.StopNextTick();
 
               if (ModStarter.Config.GetBool("LogUnstuckBeavers"))
               {
