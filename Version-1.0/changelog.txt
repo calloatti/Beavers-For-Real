@@ -1,17 +1,33 @@
-2.0.4
-Reafactored water updates
-2.0.3
-Added null checks and improved stability for NavMesh updates and citizen rescue.
-2.0.2
-Optional unstuck log added.
-2.0.1
-Added walker.StopNextTick to stuck patch
-2.0.0
-Complete mod rewrite,stuck beavers fixed
-1.2.0
-Lowered edge cost from 1.5 to 1.0 so edges expand DC range
-1.1.0
-Local updates instead of nuking the whole map
-Swimming animation patch to try to keep the beavers on the surface
-1.0.0
-Initial release
+--------------------------------------------------------------------------------
+Game Version: 1.0.0.0
+Mod Version: 2.0.4
+- Refactored water updates
+--------------------------------------------------------------------------------
+Game Version: 1.0.0.0
+Mod Version: 2.0.3
+- Added null checks and improved stability for NavMesh updates and citizen rescue
+--------------------------------------------------------------------------------
+Game Version: 1.0.0.0
+Mod Version: 2.0.2
+- Optional unstuck log added
+--------------------------------------------------------------------------------
+Game Version: 1.0.0.0
+Mod Version: 2.0.1
+- Added walker.StopNextTick to stuck patch
+--------------------------------------------------------------------------------
+Game Version: 1.0.0.0
+Mod Version: 2.0.0
+- Complete mod rewrite, stuck beavers fixed
+--------------------------------------------------------------------------------
+Game Version: 1.0.0.0
+Mod Version: 1.2.0
+- Lowered edge cost from 1.5 to 1.0 so edges expand DC range
+--------------------------------------------------------------------------------
+Game Version: 1.0.0.0
+Mod Version: 1.1.0
+- Local updates instead of nuking the whole map
+- Swimming animation patch to try to keep the beavers on the surface
+--------------------------------------------------------------------------------
+Game Version: 1.0.0.0
+Mod Version: 1.0.0
+- Initial release
