@@ -13,6 +13,7 @@ Options = []
 AvailableIn = ["MainMenu", "Game"]
 RequiresRestart = false
 RequiresReload = false
+
 Key = "LogUnstuckBeavers"
 Type = "bool"
 DefaultValue = false
