@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Timberborn.Navigation;
 using UnityEngine;
@@ -17,11 +18,20 @@ namespace Calloatti.BeaversForReal
     {
       if (!_dynamicUpdatesEnabled) return;
 
+      // --- OPTIMIZATION: Debouncing (Process localized changes after cooldown) ---
+      if (_pendingUpdateCoordinates.Count > 0)
+      {
+        _rebuildCooldown -= Time.unscaledDeltaTime;
+        if (_rebuildCooldown <= 0f)
+        {
+          var coords = new List<Vector3Int>(_pendingUpdateCoordinates);
+          _pendingUpdateCoordinates.Clear();
+          ProcessLocalizedChange(coords);
+        }
+      }
+
       double frameTimeMs = Time.unscaledDeltaTime * 1000.0;
       double finalBudget = Math.Max(0.2, Math.Min(frameTimeMs * 0.05, 1.5));
-
-      // Fetch the config exactly ONCE per frame
-      _cachedMaxWaterNavHeight = ModStarter.Config.GetFloat("MaxWaterNavigationHeight");
 
       _waterUpdateStopwatch.Restart();
 

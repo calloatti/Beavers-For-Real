@@ -1,0 +1,13 @@
+ID,Text,Comment
+Calloatti.SimpleConfig.ModSettings,"Mod設定",
+Calloatti.SimpleConfig.SaveChanges,"変更を保存",
+Calloatti.SimpleConfig.ValidationFailed,"検証失敗！",
+Calloatti.SimpleConfig.Saved,"保存しました！",
+Calloatti.SimpleConfig.Key,"キー:",
+Calloatti.SimpleConfig.Default,"デフォルト:",
+Calloatti.SimpleConfig.None,"なし",
+Calloatti.SimpleConfig.Min,"最小:",
+Calloatti.SimpleConfig.Max,"最大:",
+Calloatti.SimpleConfig.RequiresRestart,"[再起動が必要]",
+Calloatti.SimpleConfig.RequiresReload,"[リロードが必要]",
+Calloatti.SimpleConfig.CurrentValue,"現在:",

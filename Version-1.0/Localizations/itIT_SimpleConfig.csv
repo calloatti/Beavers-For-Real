@@ -1,0 +1,13 @@
+ID,Text,Comment
+Calloatti.SimpleConfig.ModSettings,"Impostazioni Mod",
+Calloatti.SimpleConfig.SaveChanges,"Salva Modifiche",
+Calloatti.SimpleConfig.ValidationFailed,"Convalida Fallita!",
+Calloatti.SimpleConfig.Saved,"Salvato!",
+Calloatti.SimpleConfig.Key,"Chiave:",
+Calloatti.SimpleConfig.Default,"Predefinito:",
+Calloatti.SimpleConfig.None,"Nessuno",
+Calloatti.SimpleConfig.Min,"Min:",
+Calloatti.SimpleConfig.Max,"Max:",
+Calloatti.SimpleConfig.RequiresRestart,"[Richiede Riavvio]",
+Calloatti.SimpleConfig.RequiresReload,"[Richiede Ricarica]",
+Calloatti.SimpleConfig.CurrentValue,"Corrente:",

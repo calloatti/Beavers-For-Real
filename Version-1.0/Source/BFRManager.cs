@@ -66,6 +66,9 @@ namespace Calloatti.BeaversForReal
       _visualizer.Manager = this;
       _visualizer.Shorelines = _shorelines;
 
+      // --- OPTIMIZATION: Read config exactly ONCE during load ---
+      _cachedMaxWaterNavHeight = ModStarter.Config.GetFloat("MaxWaterNavigationHeight");
+
       if (_debugInputService != null) _debugInputService.OnToggleDebug += ToggleDebug;
     }
 

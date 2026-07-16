@@ -1,0 +1,13 @@
+ID,Text,Comment
+Calloatti.SimpleConfig.ModSettings,"模組設定",
+Calloatti.SimpleConfig.SaveChanges,"儲存更改",
+Calloatti.SimpleConfig.ValidationFailed,"驗證失敗！",
+Calloatti.SimpleConfig.Saved,"已儲存！",
+Calloatti.SimpleConfig.Key,"鍵:",
+Calloatti.SimpleConfig.Default,"預設:",
+Calloatti.SimpleConfig.None,"無",
+Calloatti.SimpleConfig.Min,"最小值:",
+Calloatti.SimpleConfig.Max,"最大值:",
+Calloatti.SimpleConfig.RequiresRestart,"[需要重新啟動]",
+Calloatti.SimpleConfig.RequiresReload,"[需要重新載入]",
+Calloatti.SimpleConfig.CurrentValue,"目前:",

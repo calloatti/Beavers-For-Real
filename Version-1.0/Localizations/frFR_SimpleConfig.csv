@@ -1,0 +1,13 @@
+ID,Text,Comment
+Calloatti.SimpleConfig.ModSettings,"Paramètres du Mod",
+Calloatti.SimpleConfig.SaveChanges,"Enregistrer les Modifications",
+Calloatti.SimpleConfig.ValidationFailed,"Échec de la Validation !",
+Calloatti.SimpleConfig.Saved,"Enregistré !",
+Calloatti.SimpleConfig.Key,"Clé :",
+Calloatti.SimpleConfig.Default,"Défaut :",
+Calloatti.SimpleConfig.None,"Aucun",
+Calloatti.SimpleConfig.Min,"Min :",
+Calloatti.SimpleConfig.Max,"Max :",
+Calloatti.SimpleConfig.RequiresRestart,"[Redémarrage Requis]",
+Calloatti.SimpleConfig.RequiresReload,"[Rechargement Requis]",
+Calloatti.SimpleConfig.CurrentValue,"Actuel :",

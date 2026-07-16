@@ -1,0 +1,13 @@
+ID,Text,Comment
+Calloatti.SimpleConfig.ModSettings,"Налаштування Моду",
+Calloatti.SimpleConfig.SaveChanges,"Зберегти Зміни",
+Calloatti.SimpleConfig.ValidationFailed,"Помилка Валідації!",
+Calloatti.SimpleConfig.Saved,"Збережено!",
+Calloatti.SimpleConfig.Key,"Ключ:",
+Calloatti.SimpleConfig.Default,"За Замовчуванням:",
+Calloatti.SimpleConfig.None,"Немає",
+Calloatti.SimpleConfig.Min,"Мін:",
+Calloatti.SimpleConfig.Max,"Макс:",
+Calloatti.SimpleConfig.RequiresRestart,"[Потрібен Перезапуск]",
+Calloatti.SimpleConfig.RequiresReload,"[Потрібне Перезавантаження]",
+Calloatti.SimpleConfig.CurrentValue,"Поточний:",

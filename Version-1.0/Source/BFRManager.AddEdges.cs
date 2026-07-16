@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Timberborn.BlockSystem;
 using Timberborn.NaturalResources;
 using Timberborn.Navigation;
@@ -11,11 +12,18 @@ namespace Calloatti.BeaversForReal
   {
     private void ProcessAndAddEdges()
     {
-      List<int> potentialLedges = new List<int>();
+      // --- OPTIMIZATION: Memory Reuse ---
+      _potentialLedges.Clear();
       int maxNodes = _nodeIdService.NumberOfNodes;
 
-      // Our O(1) cache map. If it's true, we already know it's a valid floor.
-      bool[] isStandable = new bool[maxNodes];
+      if (_isStandableCache == null || _isStandableCache.Length < maxNodes)
+      {
+        _isStandableCache = new bool[maxNodes];
+      }
+      else
+      {
+        Array.Clear(_isStandableCache, 0, _isStandableCache.Length);
+      }
 
       // Phase 1: The Initial Scan and Filter
       for (int nodeId = 0; nodeId < maxNodes; nodeId++)
@@ -26,7 +34,7 @@ namespace Calloatti.BeaversForReal
         if (!IsStandableSurface(coords)) continue;
 
         // Cache it so Phase 2 can just look it up instantly
-        isStandable[nodeId] = true;
+        _isStandableCache[nodeId] = true;
 
         // Check NavMesh and subconditions for jumping OFF
         if (_terrainNavMeshGraph.IsOnNavMesh(nodeId))
@@ -43,7 +51,8 @@ namespace Calloatti.BeaversForReal
           for (int i = 0; i < objectsAtSpot.Count; i++)
           {
             var obj = objectsAtSpot[i];
-            if (obj.GetComponentOfNullable<PlantableSpec>() == null && obj.GetComponentOfNullable<NaturalResourceSpec>() == null)
+            // --- OPTIMIZATION: Fast Reject Filtering ---
+            if (obj.GetComponent<PlantableSpec>() == null && obj.GetComponent<NaturalResourceSpec>() == null)
             {
               hasBuilding = true;
               break;
@@ -52,11 +61,11 @@ namespace Calloatti.BeaversForReal
           if (hasBuilding) continue;
         }
 
-        potentialLedges.Add(nodeId);
+        _potentialLedges.Add(nodeId);
       }
 
       // Phase 2: Neighbor Processing and Edge Creation
-      foreach (int upperNodeId in potentialLedges)
+      foreach (int upperNodeId in _potentialLedges)
       {
         Vector3Int upper = _nodeIdService.IdToGrid(upperNodeId);
 
@@ -66,7 +75,7 @@ namespace Calloatti.BeaversForReal
         foreach (var d in _cardinalDeltas)
         {
           Vector3Int neighborXY = upper + d;
-          if (!_terrainService.Contains(neighborXY)) continue;
+          if (!_terrainService.Contains(new Vector2Int(neighborXY.x, neighborXY.y))) continue;
 
           // Does vanilla already have a path in this exact X/Y direction? (e.g. Stairs/Ramps)
           bool hasVanillaEdge = false;
@@ -91,7 +100,7 @@ namespace Calloatti.BeaversForReal
             int checkId = _nodeIdService.GridToId(checkCoords);
 
             // O(1) lookup. No recalculation.
-            if (isStandable[checkId])
+            if (_isStandableCache[checkId])
             {
               lowerNodeId = checkId;
               lower = checkCoords;
@@ -141,7 +150,8 @@ namespace Calloatti.BeaversForReal
         for (int i = 0; i < objectsAtLevel.Count; i++)
         {
           var obj = objectsAtLevel[i];
-          if (obj.GetComponentOfNullable<PlantableSpec>() == null && obj.GetComponentOfNullable<NaturalResourceSpec>() == null)
+          // --- OPTIMIZATION: Fast Reject Filtering ---
+          if (obj.GetComponent<PlantableSpec>() == null && obj.GetComponent<NaturalResourceSpec>() == null)
           {
             return false;
           }

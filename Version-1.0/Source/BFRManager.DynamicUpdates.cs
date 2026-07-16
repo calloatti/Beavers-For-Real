@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using HarmonyLib;
 using Timberborn.BlockSystem;
 using Timberborn.NaturalResources;
@@ -14,6 +15,15 @@ namespace Calloatti.BeaversForReal
     private static bool _dynamicUpdatesEnabled = false;
     private static bool _processRegularChangesFirstRun = true;
     private static readonly HashSet<Vector3Int> _pendingUpdateCoordinates = new HashSet<Vector3Int>();
+
+    // --- OPTIMIZATION: Debounce Timer ---
+    private float _rebuildCooldown = 0f;
+    private const float RebuildDelay = 0.25f;
+
+    // --- OPTIMIZATION: Memory Reuse ---
+    private readonly Dictionary<long, BFREdge> _thisEdgesAreOk = new Dictionary<long, BFREdge>();
+    private bool[] _isStandableCache;
+    private readonly List<int> _potentialLedges = new List<int>();
 
     public void EnableDynamicUpdates()
     {
@@ -54,9 +64,9 @@ namespace Calloatti.BeaversForReal
       public static void Postfix()
       {
         if (!_dynamicUpdatesEnabled || _instance == null || _pendingUpdateCoordinates.Count == 0) return;
-        var coords = new List<Vector3Int>(_pendingUpdateCoordinates);
-        _pendingUpdateCoordinates.Clear();
-        _instance.ProcessLocalizedChange(coords);
+
+        // --- OPTIMIZATION: Reset Debounce Timer instead of processing immediately ---
+        _instance._rebuildCooldown = RebuildDelay;
       }
     }
 
@@ -80,10 +90,18 @@ namespace Calloatti.BeaversForReal
       int searchMinX = minX - 1; int searchMaxX = maxX + 1;
       int searchMinY = minY - 1; int searchMaxY = maxY + 1;
 
-      Dictionary<long, BFREdge> ThisEdgesAreOk = new Dictionary<long, BFREdge>();
+      // --- OPTIMIZATION: Memory Reuse ---
+      _thisEdgesAreOk.Clear();
       int maxNodes = _nodeIdService.NumberOfNodes;
-      bool[] isStandable = new bool[maxNodes];
-      List<int> potentialLedges = new List<int>();
+      if (_isStandableCache == null || _isStandableCache.Length < maxNodes)
+      {
+        _isStandableCache = new bool[maxNodes];
+      }
+      else
+      {
+        Array.Clear(_isStandableCache, 0, _isStandableCache.Length);
+      }
+      _potentialLedges.Clear();
 
       // --- PHASE 1: SCAN (1:1 with AddEdges.cs snippet) ---
       for (int x = searchMinX; x <= searchMaxX; x++)
@@ -97,7 +115,7 @@ namespace Calloatti.BeaversForReal
             int nodeId = _nodeIdService.GridToId(coords);
 
             if (!IsStandableSurface(coords)) continue;
-            isStandable[nodeId] = true;
+            _isStandableCache[nodeId] = true;
 
             if (_terrainNavMeshGraph.IsOnNavMesh(nodeId))
             {
@@ -123,7 +141,8 @@ namespace Calloatti.BeaversForReal
               for (int i = 0; i < objectsAtSpot.Count; i++)
               {
                 var obj = objectsAtSpot[i];
-                if (obj.GetComponentOfNullable<PlantableSpec>() == null && obj.GetComponentOfNullable<NaturalResourceSpec>() == null)
+                // --- OPTIMIZATION: Fast Reject Filtering ---
+                if (obj.GetComponent<PlantableSpec>() == null && obj.GetComponent<NaturalResourceSpec>() == null)
                 {
                   hasBuilding = true;
                   break;
@@ -131,13 +150,13 @@ namespace Calloatti.BeaversForReal
               }
               if (hasBuilding) continue;
             }
-            potentialLedges.Add(nodeId);
+            _potentialLedges.Add(nodeId);
           }
         }
       }
 
       // --- PHASE 2: NEIGHBOR PROCESSING (1:1 with AddEdges.cs snippet) ---
-      foreach (int upperNodeId in potentialLedges)
+      foreach (int upperNodeId in _potentialLedges)
       {
         Vector3Int upper = _nodeIdService.IdToGrid(upperNodeId);
         var vanillaNeighbors = _terrainNavMeshGraph.GetNeighbors(upperNodeId);
@@ -168,16 +187,16 @@ namespace Calloatti.BeaversForReal
           {
             Vector3Int checkCoords = new Vector3Int(neighborXY.x, neighborXY.y, z);
             int checkId = _nodeIdService.GridToId(checkCoords);
-            if (isStandable[checkId])
+            if (_isStandableCache[checkId])
             {
               long hash = GetHash(upper, checkCoords);
               var candidate = new BFREdge(upperNodeId, upper, checkId, checkCoords) { IsBlockedByWater = false };
               if (IsLedgePhysicallyValid(candidate))
               {
                 if (_shorelineDict.TryGetValue(hash, out var existing))
-                  ThisEdgesAreOk[hash] = existing;
+                  _thisEdgesAreOk[hash] = existing;
                 else
-                  ThisEdgesAreOk[hash] = candidate;
+                  _thisEdgesAreOk[hash] = candidate;
               }
               break;
             }
@@ -196,7 +215,7 @@ namespace Calloatti.BeaversForReal
         if (upperIn && lowerIn)
         {
           long hash = GetHash(edge.Upper, edge.Lower);
-          if (!ThisEdgesAreOk.ContainsKey(hash))
+          if (!_thisEdgesAreOk.ContainsKey(hash))
           {
             _shorelineDict.Remove(hash);
             _shorelines.RemoveAt(i);
@@ -207,7 +226,7 @@ namespace Calloatti.BeaversForReal
       }
 
       // --- PHASE 4: ADDITION ---
-      foreach (var kvp in ThisEdgesAreOk)
+      foreach (var kvp in _thisEdgesAreOk)
       {
         if (!_shorelineDict.ContainsKey(kvp.Key))
         {

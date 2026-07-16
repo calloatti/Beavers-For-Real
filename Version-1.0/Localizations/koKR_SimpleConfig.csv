@@ -1,0 +1,13 @@
+ID,Text,Comment
+Calloatti.SimpleConfig.ModSettings,"모드 설정",
+Calloatti.SimpleConfig.SaveChanges,"변경 사항 저장",
+Calloatti.SimpleConfig.ValidationFailed,"유효성 검사 실패!",
+Calloatti.SimpleConfig.Saved,"저장됨!",
+Calloatti.SimpleConfig.Key,"키:",
+Calloatti.SimpleConfig.Default,"기본값:",
+Calloatti.SimpleConfig.None,"없음",
+Calloatti.SimpleConfig.Min,"최소:",
+Calloatti.SimpleConfig.Max,"최대:",
+Calloatti.SimpleConfig.RequiresRestart,"[다시 시작 필요]",
+Calloatti.SimpleConfig.RequiresReload,"[다시 로드 필요]",
+Calloatti.SimpleConfig.CurrentValue,"현재:",

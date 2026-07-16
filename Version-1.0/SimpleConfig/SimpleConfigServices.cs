@@ -1,6 +1,7 @@
 ﻿using Timberborn.DropdownSystem;
 using Timberborn.Modding;
 using Timberborn.SingletonSystem;
+using Timberborn.Localization;
 
 namespace Calloatti.Config
 {
@@ -25,16 +26,22 @@ namespace Calloatti.Config
     public static SimpleConfigUIDependencies Instance { get; private set; }
     public DropdownItemsSetter DropdownItemsSetter { get; }
     public DropdownListDrawer DropdownListDrawer { get; }
+    public ILoc Loc { get; }
 
-    public SimpleConfigUIDependencies(DropdownItemsSetter dropdownItemsSetter, DropdownListDrawer dropdownListDrawer)
+    public SimpleConfigUIDependencies(DropdownItemsSetter dropdownItemsSetter, DropdownListDrawer dropdownListDrawer, ILoc loc)
     {
       DropdownItemsSetter = dropdownItemsSetter;
       DropdownListDrawer = dropdownListDrawer;
+      Loc = loc;
+
+      // Assign the static instance immediately upon instantiation, 
+      // preventing race conditions with Harmony UI patches.
+      Instance = this;
     }
 
     public void Load()
     {
-      Instance = this;
+      // No-op: instance assignment moved to constructor
     }
   }
 }

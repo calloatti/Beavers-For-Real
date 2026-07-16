@@ -26,9 +26,12 @@ namespace Calloatti.Config
       Button bindingsButton = root.Q<Button>("BindingsButton");
       if (bindingsButton == null) return;
 
+      // Fetch ILoc safely from your dependencies singleton
+      var loc = SimpleConfigUIDependencies.Instance?.Loc;
+
       Button settingsButton = (Button)Activator.CreateInstance(bindingsButton.GetType());
       settingsButton.name = "ModSettingsButton";
-      settingsButton.text = "Mod Settings";
+      settingsButton.text = loc.T("Calloatti.SimpleConfig.ModSettings");
 
       int sheetCount = bindingsButton.styleSheets.count;
       for (int i = 0; i < sheetCount; i++)
