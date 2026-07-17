@@ -1,0 +1,9 @@
+ID,Text,Comment
+Calloatti.BeaversForReal.KeyBindingGroup,"真实海狸",
+Calloatti.BeaversForReal.KeyBind.Toggle,"切换调试导航网格",
+Calloatti.Config.BeaversForReal.MaxWaterNavigationHeight.Label,"最大水面导航高度",
+Calloatti.Config.BeaversForReal.MaxWaterNavigationHeight.Tooltip,"海狸在陆地和水面之间可以航行的最大高度差。",
+Calloatti.Config.BeaversForReal.LogUnstuckBeavers.Label,"记录脱困海狸",
+Calloatti.Config.BeaversForReal.LogUnstuckBeavers.Tooltip,"当海狸被模组从卡住状态解除时记录到 player.log。",
+Calloatti.Config.BeaversForReal.MaxWaterContamination.Label,"最大水污染程度",
+Calloatti.Config.BeaversForReal.MaxWaterContamination.Tooltip,"海狸愿意游过的最大污水污染程度（0.0 到 1.0）。",

@@ -1,0 +1,9 @@
+ID,Text,Comment
+Calloatti.BeaversForReal.KeyBindingGroup,"Castores de Verdade",
+Calloatti.BeaversForReal.KeyBind.Toggle,"Alternar navmesh de depuração",
+Calloatti.Config.BeaversForReal.MaxWaterNavigationHeight.Label,"Altura máxima de navegação na água",
+Calloatti.Config.BeaversForReal.MaxWaterNavigationHeight.Tooltip,"A diferença máxima de altura que os castores podem navegar da terra para a água e vice-versa.",
+Calloatti.Config.BeaversForReal.LogUnstuckBeavers.Label,"Registrar castores desatolados",
+Calloatti.Config.BeaversForReal.LogUnstuckBeavers.Tooltip,"Registra em player.log quando um castor é desatolado pelo mod.",
+Calloatti.Config.BeaversForReal.MaxWaterContamination.Label,"Contaminação máxima da água",
+Calloatti.Config.BeaversForReal.MaxWaterContamination.Tooltip,"O nível máximo de contaminação por água ruim (0,0 a 1,0) que os castores atravessarão de bom grado.",

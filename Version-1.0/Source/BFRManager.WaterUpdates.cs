@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Timberborn.Navigation;
 using UnityEngine;
 
@@ -8,54 +7,50 @@ namespace Calloatti.BeaversForReal
 {
   public partial class BFRManager
   {
-    // OPTIMIZATION: Reuse a single Stopwatch to prevent GC allocations (lag spikes) every frame
-    private readonly Stopwatch _waterUpdateStopwatch = new Stopwatch();
+    private const int ShorelinesPerTick = 500;
 
-    // OPTIMIZATION: Cache the config value so we don't query the file/dictionary thousands of times
-    private float _cachedMaxWaterNavHeight;
-
-    public void UpdateSingleton()
+    public void Tick()
     {
       if (!_dynamicUpdatesEnabled) return;
 
-      // --- OPTIMIZATION: Debouncing (Process localized changes after cooldown) ---
+      // Process all pending navmesh changes (triggered by terrain/building edits)
       if (_pendingUpdateCoordinates.Count > 0)
       {
-        _rebuildCooldown -= Time.unscaledDeltaTime;
-        if (_rebuildCooldown <= 0f)
-        {
-          var coords = new List<Vector3Int>(_pendingUpdateCoordinates);
-          _pendingUpdateCoordinates.Clear();
-          ProcessLocalizedChange(coords);
-        }
+        var coords = new List<Vector3Int>(_pendingUpdateCoordinates);
+        _pendingUpdateCoordinates.Clear();
+        ProcessLocalizedChange(coords);
       }
 
-      double frameTimeMs = Time.unscaledDeltaTime * 1000.0;
-      double finalBudget = Math.Max(0.2, Math.Min(frameTimeMs * 0.05, 1.5));
-
-      _waterUpdateStopwatch.Restart();
-
-      // Loop through shorelines and update water levels within the time budget
-      while (_waterUpdateStopwatch.Elapsed.TotalMilliseconds < finalBudget && _shorelines.Count > 0)
+      // Process a batch of shorelines for water level updates
+      int maxToProcess = Math.Min(ShorelinesPerTick, _shorelines.Count);
+      int processed = 0;
+      while (processed < maxToProcess)
       {
         if (_validationIndex >= _shorelines.Count)
         {
           _validationIndex = 0;
-          break;
         }
 
         ProcessWaterLevel(_shorelines[_validationIndex]);
         _validationIndex++;
+        processed++;
       }
     }
 
     private void ProcessWaterLevel(BFREdge s)
     {
-      float depth = _waterMap.WaterDepth(s.Lower);
-      float zDiff = s.Upper.z - (s.Lower.z + depth);
+      // Ask the engine for the true physics height of the water surface at this column
+      float waterSurface = _waterMap.WaterHeightOrFloor(s.Lower);
+      float zDiff = s.Upper.z - waterSurface;
 
-      // OPTIMIZATION: Read the cached float directly from memory
-      bool shouldBeBlocked = zDiff > _cachedMaxWaterNavHeight;
+      // Use the Vector3Int override to respect vertical water column stacking (e.g., aqueducts)
+      float contamination = _waterMap.ColumnContamination(s.Lower);
+
+      bool blockedByHeight = zDiff > ModStarter.Config.GetFloat("MaxWaterNavigationHeight");
+      bool blockedByContamination = contamination > ModStarter.Config.GetFloat("MaxWaterContamination");
+
+      // If the jump is too high OR the water is too toxic, block the path
+      bool shouldBeBlocked = blockedByHeight || blockedByContamination;
 
       if (shouldBeBlocked != s.IsBlockedByWater)
       {

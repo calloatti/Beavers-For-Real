@@ -5,13 +5,14 @@ using Timberborn.Navigation;
 using Timberborn.QuickNotificationSystem;
 using Timberborn.SingletonSystem;
 using Timberborn.TerrainSystem;
+using Timberborn.TickSystem;
 using Timberborn.WaterSystem;
 using Timberborn.BlockSystem;
 using UnityEngine;
 
 namespace Calloatti.BeaversForReal
 {
-  public partial class BFRManager : ILoadableSingleton, IPostLoadableSingleton, IUpdatableSingleton, IDisposable
+  public partial class BFRManager : ILoadableSingleton, IPostLoadableSingleton, ITickableSingleton, IDisposable
   {
     public bool DebugEnabled = false;
     public static int ShorelineGroupId { get; private set; } = -1;
@@ -27,8 +28,6 @@ namespace Calloatti.BeaversForReal
     private readonly RestrictedNodeMap _restrictedNodeMap;
     private readonly NodeIdService _nodeIdService;
     private readonly StackableBlockService _stackableBlockService;
-
-    // FIX 1: Explicitly declare the _waterMap variable
     private readonly IThreadSafeWaterMap _waterMap;
 
     private readonly List<BFREdge> _shorelines = new List<BFREdge>();
@@ -39,7 +38,6 @@ namespace Calloatti.BeaversForReal
       new Vector3Int(1, 0, 0), new Vector3Int(-1, 0, 0), new Vector3Int(0, 1, 0), new Vector3Int(0, -1, 0)
     };
 
-    // FIX 2: Completely removed EventBus from the parameters so it stops throwing errors
     public BFRManager(ITerrainService ts, INavMeshService nms, NavMeshGroupService nmgs, IThreadSafeWaterMap wm, BFRInputService dis, QuickNotificationService qns, ILoc loc, IBlockService bs, TerrainNavMeshGraph tng, RestrictedNodeMap rnm, NodeIdService nis, StackableBlockService sbs)
     {
       _terrainService = ts;
@@ -51,8 +49,6 @@ namespace Calloatti.BeaversForReal
       _restrictedNodeMap = rnm;
       _nodeIdService = nis;
       _stackableBlockService = sbs;
-
-      // FIX 1: Assign the injected water map to the variable
       _waterMap = wm;
 
       _instance = this;
@@ -66,8 +62,6 @@ namespace Calloatti.BeaversForReal
       _visualizer.Manager = this;
       _visualizer.Shorelines = _shorelines;
 
-      // --- OPTIMIZATION: Read config exactly ONCE during load ---
-      _cachedMaxWaterNavHeight = ModStarter.Config.GetFloat("MaxWaterNavigationHeight");
 
       if (_debugInputService != null) _debugInputService.OnToggleDebug += ToggleDebug;
     }
@@ -83,7 +77,10 @@ namespace Calloatti.BeaversForReal
       if (_debugInputService != null) _debugInputService.OnToggleDebug -= ToggleDebug;
       if (_visualizer != null) UnityEngine.Object.Destroy(_visualizer.gameObject);
 
-      // Prevents memory leak when loading a new save!
+      // Reset static state for the next save (game does not do this for us)
+      _dynamicUpdatesEnabled = false;
+      _processRegularChangesFirstRun = true;
+      _pendingUpdateCoordinates.Clear();
       SetInstance(null);
     }
 

@@ -1,0 +1,9 @@
+ID,Text,Comment
+Calloatti.BeaversForReal.KeyBindingGroup,"Castors Pour De Vrai",
+Calloatti.BeaversForReal.KeyBind.Toggle,"Activer/désactiver le navmesh de débogage",
+Calloatti.Config.BeaversForReal.MaxWaterNavigationHeight.Label,"Hauteur maximale de navigation aquatique",
+Calloatti.Config.BeaversForReal.MaxWaterNavigationHeight.Tooltip,"La différence de hauteur maximale que les castors peuvent naviguer de la terre à l'eau et inversement.",
+Calloatti.Config.BeaversForReal.LogUnstuckBeavers.Label,"Journaliser les castors débloqués",
+Calloatti.Config.BeaversForReal.LogUnstuckBeavers.Tooltip,"Enregistre dans player.log quand un castor est débloqué par le mod.",
+Calloatti.Config.BeaversForReal.MaxWaterContamination.Label,"Contamination maximale de l'eau",
+Calloatti.Config.BeaversForReal.MaxWaterContamination.Tooltip,"Le niveau de contamination maximal par l'eau infectée (0,0 à 1,0) que les castors traverseront volontairement.",

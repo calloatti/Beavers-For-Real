@@ -16,10 +16,6 @@ namespace Calloatti.BeaversForReal
     private static bool _processRegularChangesFirstRun = true;
     private static readonly HashSet<Vector3Int> _pendingUpdateCoordinates = new HashSet<Vector3Int>();
 
-    // --- OPTIMIZATION: Debounce Timer ---
-    private float _rebuildCooldown = 0f;
-    private const float RebuildDelay = 0.25f;
-
     // --- OPTIMIZATION: Memory Reuse ---
     private readonly Dictionary<long, BFREdge> _thisEdgesAreOk = new Dictionary<long, BFREdge>();
     private bool[] _isStandableCache;
@@ -60,14 +56,7 @@ namespace Calloatti.BeaversForReal
         }
       }
 
-      [HarmonyPostfix]
-      public static void Postfix()
-      {
-        if (!_dynamicUpdatesEnabled || _instance == null || _pendingUpdateCoordinates.Count == 0) return;
 
-        // --- OPTIMIZATION: Reset Debounce Timer instead of processing immediately ---
-        _instance._rebuildCooldown = RebuildDelay;
-      }
     }
 
     private void ProcessLocalizedChange(IEnumerable<Vector3Int> changedCoordinates)
@@ -103,13 +92,13 @@ namespace Calloatti.BeaversForReal
       }
       _potentialLedges.Clear();
 
-      // --- PHASE 1: SCAN (1:1 with AddEdges.cs snippet) ---
+      // --- PHASE 1: SCAN ---
       for (int x = searchMinX; x <= searchMaxX; x++)
       {
         for (int y = searchMinY; y <= searchMaxY; y++)
         {
           if (!_terrainService.Contains(new Vector2Int(x, y))) continue;
-          for (int z = 0; z < _terrainService.Size.z; z++)
+          for (int z = 0; z < _blockService.Size.z; z++)
           {
             Vector3Int coords = new Vector3Int(x, y, z);
             int nodeId = _nodeIdService.GridToId(coords);
@@ -121,7 +110,6 @@ namespace Calloatti.BeaversForReal
             {
               if (_restrictedNodeMap.IsNodeRestricted(nodeId)) continue;
 
-              // FIX: Ignore our own custom edges when counting neighbors to prevent flip-flopping
               var neighbors = _terrainNavMeshGraph.GetNeighbors(nodeId);
               int vanillaCount = 0;
               for (int i = 0; i < neighbors.Count; i++)
@@ -141,7 +129,6 @@ namespace Calloatti.BeaversForReal
               for (int i = 0; i < objectsAtSpot.Count; i++)
               {
                 var obj = objectsAtSpot[i];
-                // --- OPTIMIZATION: Fast Reject Filtering ---
                 if (obj.GetComponent<PlantableSpec>() == null && obj.GetComponent<NaturalResourceSpec>() == null)
                 {
                   hasBuilding = true;
@@ -155,7 +142,7 @@ namespace Calloatti.BeaversForReal
         }
       }
 
-      // --- PHASE 2: NEIGHBOR PROCESSING (1:1 with AddEdges.cs snippet) ---
+      // --- PHASE 2: NEIGHBOR PROCESSING ---
       foreach (int upperNodeId in _potentialLedges)
       {
         Vector3Int upper = _nodeIdService.IdToGrid(upperNodeId);
@@ -172,7 +159,6 @@ namespace Calloatti.BeaversForReal
             Vector3Int vNeighborCoords = _nodeIdService.IdToGrid(vanillaNeighbors[i].Id);
             if (vNeighborCoords.x == neighborXY.x && vNeighborCoords.y == neighborXY.y)
             {
-              // FIX: If the connection is our own custom edge, it's not a vanilla block path. Ignore it.
               if (_shorelineDict.ContainsKey(GetHash(upper, vNeighborCoords)) || _shorelineDict.ContainsKey(GetHash(vNeighborCoords, upper)))
               {
                 continue;
@@ -204,7 +190,7 @@ namespace Calloatti.BeaversForReal
         }
       }
 
-      // --- PHASE 3: DELETION (upperIn && lowerIn) ---
+      // --- PHASE 3: DELETION ---
       for (int i = _shorelines.Count - 1; i >= 0; i--)
       {
         var edge = _shorelines[i];

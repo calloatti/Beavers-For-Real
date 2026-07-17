@@ -1,0 +1,9 @@
+ID,Text,Comment
+Calloatti.BeaversForReal.KeyBindingGroup,"บีเวอร์ตัวจริง",
+Calloatti.BeaversForReal.KeyBind.Toggle,"สลับ navmesh แก้ปัญหา",
+Calloatti.Config.BeaversForReal.MaxWaterNavigationHeight.Label,"ความสูงนำทางน้ำสูงสุด",
+Calloatti.Config.BeaversForReal.MaxWaterNavigationHeight.Tooltip,"ความแตกต่างของความสูงสูงสุดที่บีเวอร์สามารถนำทางจากบกสู่น้ำและกลับมาได้",
+Calloatti.Config.BeaversForReal.LogUnstuckBeavers.Label,"บันทึกบีเวอร์ที่ปลดติด",
+Calloatti.Config.BeaversForReal.LogUnstuckBeavers.Tooltip,"บันทึกไปยัง player.log เมื่อบีเวอร์ถูกปลดติดโดยม็อด",
+Calloatti.Config.BeaversForReal.MaxWaterContamination.Label,"การปนเปื้อนน้ำสูงสุด",
+Calloatti.Config.BeaversForReal.MaxWaterContamination.Tooltip,"ระดับการปนเปื้อนน้ำเสียสูงสุด (0.0 ถึง 1.0) ที่บีเวอร์จะยินดีว่ายผ่าน",

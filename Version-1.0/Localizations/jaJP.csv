@@ -1,0 +1,9 @@
+ID,Text,Comment
+Calloatti.BeaversForReal.KeyBindingGroup,"本物のビーバー",
+Calloatti.BeaversForReal.KeyBind.Toggle,"デバッグナビメッシュ切り替え",
+Calloatti.Config.BeaversForReal.MaxWaterNavigationHeight.Label,"最大水ナビゲーション高さ",
+Calloatti.Config.BeaversForReal.MaxWaterNavigationHeight.Tooltip,"ビーバーが陸と水の間を移動できる最大高さの差。",
+Calloatti.Config.BeaversForReal.LogUnstuckBeavers.Label,"スタック解除ビーバーを記録",
+Calloatti.Config.BeaversForReal.LogUnstuckBeavers.Tooltip,"ビーバーがMODによってスタック解除されたときにplayer.logに記録します。",
+Calloatti.Config.BeaversForReal.MaxWaterContamination.Label,"最大水汚染度",
+Calloatti.Config.BeaversForReal.MaxWaterContamination.Tooltip,"ビーバーが喜んで泳ぐ最大汚染度（0.0～1.0）。",

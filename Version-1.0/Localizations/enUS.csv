@@ -1,9 +1,9 @@
 ID,Text,Comment
 Calloatti.BeaversForReal.KeyBindingGroup,"Beavers For Real",
 Calloatti.BeaversForReal.KeyBind.Toggle,"Toggle debug navmesh",
-Calloatti.BeaversForReal.DebugOn,"Beavers For Real Debug ON",
-Calloatti.BeaversForReal.DebugOff,"Beavers For Real Debug OFF",
 Calloatti.Config.BeaversForReal.MaxWaterNavigationHeight.Label,"Max Water Navigation Height",
 Calloatti.Config.BeaversForReal.MaxWaterNavigationHeight.Tooltip,"The maximum height difference beavers can navigate from land to water and back.",
 Calloatti.Config.BeaversForReal.LogUnstuckBeavers.Label,"Log unstuck beavers",
 Calloatti.Config.BeaversForReal.LogUnstuckBeavers.Tooltip,"Logs to player.log when a beaver is unstuck by the mod",
+Calloatti.Config.BeaversForReal.MaxWaterContamination.Label,"Max Water Contamination",
+Calloatti.Config.BeaversForReal.MaxWaterContamination.Tooltip,"The maximum badwater contamination level (0.0 to 1.0) beavers will willingly swim through.",

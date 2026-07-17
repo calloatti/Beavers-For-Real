@@ -1,0 +1,9 @@
+ID,Text,Comment
+Calloatti.BeaversForReal.KeyBindingGroup,"Gerçek Kunduzlar",
+Calloatti.BeaversForReal.KeyBind.Toggle,"Hata ayıklama navmesh'ini değiştir",
+Calloatti.Config.BeaversForReal.MaxWaterNavigationHeight.Label,"Maksimum Su Gezinme Yüksekliği",
+Calloatti.Config.BeaversForReal.MaxWaterNavigationHeight.Tooltip,"Kunduzların karadan suya ve geri dönüşte gezinebileceği maksimum yükseklik farkı.",
+Calloatti.Config.BeaversForReal.LogUnstuckBeavers.Label,"Sıkışmış kunduzları günlüğe kaydet",
+Calloatti.Config.BeaversForReal.LogUnstuckBeavers.Tooltip,"Bir kunduz mod tarafından sıkışmaktan kurtarıldığında player.log'a kaydeder.",
+Calloatti.Config.BeaversForReal.MaxWaterContamination.Label,"Maksimum Su Kirliliği",
+Calloatti.Config.BeaversForReal.MaxWaterContamination.Tooltip,"Kunduzların isteyerek yüzeceği maksimum kötü su kirlilik seviyesi (0.0 ile 1.0 arası).",

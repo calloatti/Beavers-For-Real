@@ -1,0 +1,9 @@
+ID,Text,Comment
+Calloatti.BeaversForReal.KeyBindingGroup,"진짜 비버들",
+Calloatti.BeaversForReal.KeyBind.Toggle,"디버그 내비메시 전환",
+Calloatti.Config.BeaversForReal.MaxWaterNavigationHeight.Label,"최대 물 이동 높이",
+Calloatti.Config.BeaversForReal.MaxWaterNavigationHeight.Tooltip,"비버가 육지와 물 사이를 이동할 수 있는 최대 높이 차이입니다.",
+Calloatti.Config.BeaversForReal.LogUnstuckBeavers.Label,"갇힘 해제 비버 기록",
+Calloatti.Config.BeaversForReal.LogUnstuckBeavers.Tooltip,"비버가 모드에 의해 갇힘에서 해제될 때 player.log에 기록합니다.",
+Calloatti.Config.BeaversForReal.MaxWaterContamination.Label,"최대 물 오염도",
+Calloatti.Config.BeaversForReal.MaxWaterContamination.Tooltip,"비버가 기꺼이 헤엄쳐 갈 최대 오염도(0.0~1.0)입니다.",

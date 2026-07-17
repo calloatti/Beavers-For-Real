@@ -1,0 +1,9 @@
+ID,Text,Comment
+Calloatti.BeaversForReal.KeyBindingGroup,"Bobry Naprawdę",
+Calloatti.BeaversForReal.KeyBind.Toggle,"Przełącz debug navmesh",
+Calloatti.Config.BeaversForReal.MaxWaterNavigationHeight.Label,"Maksymalna wysokość nawigacji wodnej",
+Calloatti.Config.BeaversForReal.MaxWaterNavigationHeight.Tooltip,"Maksymalna różnica wysokości, jaką bobry mogą pokonać między lądem a wodą.",
+Calloatti.Config.BeaversForReal.LogUnstuckBeavers.Label,"Rejestruj odblokowane bobry",
+Calloatti.Config.BeaversForReal.LogUnstuckBeavers.Tooltip,"Zapisuje do player.log, gdy bóbr zostanie odblokowany przez mod.",
+Calloatti.Config.BeaversForReal.MaxWaterContamination.Label,"Maksymalne skażenie wody",
+Calloatti.Config.BeaversForReal.MaxWaterContamination.Tooltip,"Maksymalny poziom skażenia wodą (0.0 do 1.0), przez który bobry chętnie przepłyną.",

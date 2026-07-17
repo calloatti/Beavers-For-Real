@@ -1,0 +1,9 @@
+ID,Text,Comment
+Calloatti.BeaversForReal.KeyBindingGroup,"Настоящие бобры",
+Calloatti.BeaversForReal.KeyBind.Toggle,"Переключить отладочную навигационную сетку",
+Calloatti.Config.BeaversForReal.MaxWaterNavigationHeight.Label,"Максимальная высота водной навигации",
+Calloatti.Config.BeaversForReal.MaxWaterNavigationHeight.Tooltip,"Максимальная разница высот, которую бобры могут преодолеть между сушей и водой.",
+Calloatti.Config.BeaversForReal.LogUnstuckBeavers.Label,"Записывать освобождённых бобров",
+Calloatti.Config.BeaversForReal.LogUnstuckBeavers.Tooltip,"Записывает в player.log, когда бобёр освобождается модом.",
+Calloatti.Config.BeaversForReal.MaxWaterContamination.Label,"Максимальное заражение воды",
+Calloatti.Config.BeaversForReal.MaxWaterContamination.Tooltip,"Максимальный уровень заражения плохой водой (от 0,0 до 1,0), через который бобры готовы проплыть.",

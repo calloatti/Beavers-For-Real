@@ -1,0 +1,9 @@
+ID,Text,Comment
+Calloatti.BeaversForReal.KeyBindingGroup,"Biber für echt",
+Calloatti.BeaversForReal.KeyBind.Toggle,"Debug-Navmesh umschalten",
+Calloatti.Config.BeaversForReal.MaxWaterNavigationHeight.Label,"Maximale Wasser-Navigationshöhe",
+Calloatti.Config.BeaversForReal.MaxWaterNavigationHeight.Tooltip,"Der maximale Höhenunterschied, den Biber zwischen Land und Wasser überwinden können.",
+Calloatti.Config.BeaversForReal.LogUnstuckBeavers.Label,"Entstexte Biber protokollieren",
+Calloatti.Config.BeaversForReal.LogUnstuckBeavers.Tooltip,"Protokolliert in player.log, wenn ein Biber durch die Mod entstickt wird.",
+Calloatti.Config.BeaversForReal.MaxWaterContamination.Label,"Maximale Wasserkontaminierung",
+Calloatti.Config.BeaversForReal.MaxWaterContamination.Tooltip,"Der maximale Faulwasserkontaminierungsgrad (0,0 bis 1,0), den Biber bereitwillig durchschwimmen.",
