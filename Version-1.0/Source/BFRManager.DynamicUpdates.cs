@@ -176,7 +176,7 @@ namespace Calloatti.BeaversForReal
             if (_isStandableCache[checkId])
             {
               long hash = GetHash(upper, checkCoords);
-              var candidate = new BFREdge(upperNodeId, upper, checkId, checkCoords) { IsBlockedByWater = false };
+              var candidate = new BFREdge(upperNodeId, upper, checkId, checkCoords) { IsBlockedByWater = true };
               if (IsLedgePhysicallyValid(candidate))
               {
                 if (_shorelineDict.TryGetValue(hash, out var existing))
@@ -223,6 +223,8 @@ namespace Calloatti.BeaversForReal
           _shorelines.Add(kvp.Value);
           _navMeshService.AddEdge(kvp.Value.EdgeDown);
           _navMeshService.AddEdge(kvp.Value.EdgeUp);
+          _navMeshService.BlockEdge(kvp.Value.EdgeDown);
+          _navMeshService.BlockEdge(kvp.Value.EdgeUp);
         }
       }
     }

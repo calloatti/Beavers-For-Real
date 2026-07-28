@@ -115,7 +115,7 @@ namespace Calloatti.BeaversForReal
           if (_shorelineDict.ContainsKey(hash)) continue;
 
           // Create the edge unblocked for testing
-          var newEdge = new BFREdge(upperNodeId, upper, lowerNodeId, lower) { IsBlockedByWater = false };
+          var newEdge = new BFREdge(upperNodeId, upper, lowerNodeId, lower) { IsBlockedByWater = true };
 
           if (IsLedgePhysicallyValid(newEdge))
           {
@@ -127,6 +127,8 @@ namespace Calloatti.BeaversForReal
 
             _navMeshService.AddEdge(newEdge.EdgeDown);
             _navMeshService.AddEdge(newEdge.EdgeUp);
+            _navMeshService.BlockEdge(newEdge.EdgeDown);
+            _navMeshService.BlockEdge(newEdge.EdgeUp);
           }
         }
       }
