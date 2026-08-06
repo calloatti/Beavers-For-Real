@@ -7,9 +7,5 @@
     "AllowOtherModifiers": false,
     "DevModeOnly": false
   },
-  "PrimaryInputBindingSpec": {
-    "Path": "/Keyboard/k",
-    "InputModifiers": "Shift",
-    "Unchangeable": false
-  }
+  "PrimaryInputBindingSpec": {"Path": "/Keyboard/k", "InputModifiers": "Shift", "Unchangeable": false}
 }
