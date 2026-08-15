@@ -1,0 +1,2 @@
+* Game Version: 1.0.0.0 - Mod Version: 2.1.2
+- New shoreline edges now start blocked until first water check

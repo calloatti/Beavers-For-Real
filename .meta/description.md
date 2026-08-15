@@ -1,0 +1,37 @@
+The Awakening (What this mod does):
+This mod awakens the primal instincts dormant in your colony's DNA. Beavers have finally remembered how to navigate directly between natural land and water without requiring stairs.
+
+Version 2.1.0: Beavers got smarter and will not dive into contaminated water. (contamination level configurable)
+
+### The Forgotten Art of the Plop
+Long ago, when the humans ruined the Earth and faded into dust, the beavers inherited the wasteland. To survive, they studied the crumbling ruins of mankind. They learned the secrets of the wheel, the mastery of hydrodynamics, and the devastating power of dynamite. They became brilliant engineers, architects, and scientists.
+But in their relentless pursuit of human technology, the beavers adopted a tragic human flaw: they forgot how to be beavers.
+By mimicking the rigid, grid-based thinking of their predecessors, Folktails and Iron Teeth alike developed a strange psychological block. They began to believe that to enter a river, one must use a designated, OSHA-compliant wooden staircase. A beaver standing on a gentle dirt slope right next to a refreshing stream would simply stare at the water, paralyzed, waiting for a builder to arrive with pine planks. They had forgotten the ancient, ancestral art of simply sliding down the mud into the water.
+
+Seamless Shorelines: Beavers can now slip into the water directly from natural terrain ledges and pull themselves back up onto the muddy banks.
+Configurable Instincts: By default, they can navigate a maximum terrain height difference of 0.5 meters into the water. You can adjust this physical limit in the BeaversForReal.txt config file.
+Jumping into or out of the water directly from constructed blocks/buildings is now supported!
+
+Performance test:
+FPS: 50/30 mod enabled
+FPS: 52/31 mod disabled
+
+### Mod Features at a Glance
+Natural Water Access: Beavers walk smoothly from dirt slopes into water.
+Dynamic Pathfinding: Shoreline paths dynamically update when the terrain or water depth changes.
+Debug Visualizer: Press Shift + K to toggle a real-time developer visualizer that draws the active (green) and blocked (red) shoreline nodes.
+
+IMPORTANT: The height difference between dry land and water has to be 0.5 m or less. If water level goes down, the paths get disabled and beavers can get stuck.
+
+### Settings:
+Settings - Mod Settings (settings are saved in \PlayerData)
+
+---
+
+[Mods on Steam](https://steamcommunity.com/sharedfiles/filedetails/?id=3682179025)
+
+[Mods on mod-dot-io](https://mod.io/u/calloatti/?_sort=name)
+
+[Mods on Github](https://github.com/search?q=owner%3Acalloatti+sort%3Aname-asc+%22Timberborn+Mod%22&type=repositories)
+
+[Mod zip files](https://github.com/calloatti/ModZips)

@@ -1,0 +1,89 @@
+we are going to change the way we connect the edges. instead of connecting them directly, we will add a node at the height of upper, but over lower. then we will add 
+needed nodes at -1 intervals until we get to the height of lower, then we restrict all these intermediate nodes, and then we add edges connecting upper to lower. we stop 
+doing diagonal nodes, we only check N,S,E,W
+
+Pathing nodes are placed in the center of each tile.
+
+They can be active, or restricted from normal pathfindind.This restriction is determined by vanilla Timberborn's RestrictedNodeMap. 
+A node typically becomes restricted when an obstacle, like a solid building, a tree, or an impassable terrain feature, is placed on top of it, making it un-walkable.
+
+Graph Theory, which is the mathematical foundation for almost all pathfinding algorithms in video games (like A* or Dijkstra's algorithm).
+
+To break down exactly how your terminology matches the game's code:
+
+Node (or Vertex): A discrete, specific location on the map that an entity (like a beaver) can stand on. In Timberborn, the grid is translated into a list of these nodes. 
+When your code draws a green or yellow ball, it is drawing the exact center of a nodeId.
+
+Edge (or Link): The connection between two adjacent nodes. If an edge exists between Node A and Node B, it tells the game's pathfinding engine, "It is physically possible 
+to walk from A directly to B." When your code draws a red line, it is iterating through the GetNeighbors(nodeId) list and drawing the edges.
+
+Graph (or NavMesh): The entire interconnected web of all nodes and edges.
+
+So when a beaver needs to get to a tree, the game looks at the graph, finds the node the beaver is currently standing on, finds the node next to the tree, and calculates 
+the shortest sequence of edges to get there!
+
+Based on the source code you provided, Timberborn’s pathfinding system is incredibly robust and relies on a heavily optimized, memory-efficient graph architecture. 
+Instead of treating the map as a physical 3D space during pathfinding, it flattens the entire world into an array of integers and Boolean flags.
+
+Here is exactly how the game builds the graph, manages edges, and handles the RestrictedNodeMap.
+
+1. Building the Nodes (The Foundation)
+The game does not use Vector3 coordinates for pathfinding calculations because 3D math is too slow for thousands of beavers. Instead, it uses the NodeIdService.
+
+When the game loads, NodeIdService calculates the total volume of the map (_size.x * _size.y * _size.z) and sets NumberOfNodes.
+
+It mathematically flattens the 3D grid into a 1D array index.
+
+The GridToId(Vector3Int coordinates) method takes an X, Y, Z coordinate and converts it into a single integer nodeId.
+
+It stores a reverse-lookup array called _idToCoordinatesTable so it can instantly convert a nodeId back into a 3D world coordinate without doing math.
+
+2. Building the Edges (The Terrain)
+The initial physical connections between these nodes are built by the TerrainNavMeshUpdater.
+
+It scans every single 3D coordinate on the map using _terrainService.Size.
+
+If it finds a tile that is considered solid ground (_terrainService.OnGround), it attempts to draw edges to its neighbors.
+
+
+Orthogonal Edges (Up, Down, Left, Right): It checks if the adjacent tile is walkable using TilesAreOrthogonallyConnected. This method ensures the neighbor's height is 
+less than or equal to the current tile's height, allowing beavers to step down or walk flat.
+
+
+Diagonal Edges: It checks diagonal tiles using TilesAreDiagonallyConnected. To prevent beavers from cutting corners through solid walls, this method requires that the two 
+orthogonal tiles adjacent to the diagonal cut are also solid ground.
+
+For every valid connection, it creates a NavMeshEdge and adds it to the INavMeshService.
+
+3. The RestrictedNodeMap
+The RestrictedNodeMap is surprisingly simple. It is just an ILoadableSingleton that holds a massive boolean array: bool[] _nodes.
+
+The array is exactly the same size as the total number of nodes on the map.
+
+If _nodes[nodeId] is true, that specific voxel is considered completely impassable.
+
+So, what actually restricts a node? Buildings and blocks. This is handled by the NavMeshObjectUpdater.
+
+When a building (BlockObject) is placed, the game checks every single voxel (block) that the building occupies.
+
+It checks if the building occupies the physical bottom of the voxel using occupiedBlock.Occupation.Intersects(BlockOccupations.Bottom).
+
+If it touches the floor of that voxel, it tells the navMeshObject to add those coordinates to the restricted list.
+
+These coordinates are sent to the RestrictedNodeUpdater, which queues them up and eventually calls _restrictedNodeMap.RestrictNode(nodeId), flipping that boolean to true.
+
+4. Dynamic Updates & Edge Blocking (Buildings vs Edges)
+Restricting a node stops a beaver from standing on it, but buildings also need to block edges so beavers don't try to path through walls to get to the other side. This is 
+also handled by NavMeshObjectUpdater.
+
+Auto-Walls: The game automatically generates blocking edges around the perimeter of a building's occupied bottom coordinates using AddEdgesBlockedByWalls.
+
+Entrances: It specifically looks for the building's entrance using GetEntranceEdge. It creates a blocking edge around the perimeter, but removes the blockage exactly 
+where the door is so beavers can enter.
+
+
+Terraforming: If the player places dynamite or builds a dirt block, TerrainNavMeshUpdater listens for the TerrainHeightChanged event. It instantly recalculates the valid 
+orthogonal and diagonal edges for the affected coordinates and their immediate neighbors.
+
+All of these additions, blockages, and removals are packaged into NavMeshChange structs and thrown into queues inside the NavMeshUpdater. Every tick, the game processes 
+these queues and updates the master TerrainNavMeshGraph arrays so the pathfinders always have the latest map data.

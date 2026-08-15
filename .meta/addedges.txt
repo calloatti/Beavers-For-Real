@@ -1,0 +1,28 @@
+iterate NodeIdService
+
+pass Vector3Int airCoords to BVRSurfaceValidator.cs to check if its a valid surface
+
+
+Phase 1: The Initial Scan and Filter
+
+Iterate: Loop through every single Node ID from 0 to NumberOfNodes - 1 using NodeIdService.
+
+NavMesh & Subconditions Check: Ask if the node is already on the NavMesh.
+
+If YES (it is on the NavMesh): * Is it marked as restricted? If yes, ignore it.
+
+Does it already have all 8 potential edges connected? If yes, ignore it.
+
+If NO (it is an isolated 1x1 island, etc.): * It bypasses those two subconditions and moves to the next step.
+
+Surface Check: Pass the node's coordinates to the BVRSurfaceValidator to confirm there is a physical solid block or building underneath. If it fails, ignore it.
+
+Store: If the node survives these filters, add it to your "Potential Ledges" list.
+
+Phase 2: Neighbor Processing and Edge Creation
+5. Iterate List: Loop through the completely filtered "Potential Ledges" list.
+6. Find Neighbors: For each node in the list, calculate the coordinates for its 4 cardinal neighbors (North, South, East, West).
+7. Compare Height: Check the surface height (Z) at each neighboring coordinate. If the neighbor's Z is equal to or higher than the ledge's Z, ignore it.
+8. Obstruction Scan: If the neighbor is lower (a valid drop-off), perform a vertical scan through the air blocks between the upper ledge and the lower floor. If any solid 
+building or platform occupies that gap, ignore it.
+9. Add Edges: If the gap is completely clear, create the bidirectional NavMesh edges connecting the upper node directly to the lower node, and add them to the NavMesh.
