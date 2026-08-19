@@ -12,7 +12,7 @@ namespace Calloatti.BeaversForReal
     public void StartMod(IModEnvironment modEnvironment)
     {
       Config = new SimpleConfig(modEnvironment.ModPath);
-      new Harmony("calloatti.beaversforreal").PatchAll();
+      new Harmony("Calloatti.BeaversForReal").PatchAll();
     }
   }
 }
