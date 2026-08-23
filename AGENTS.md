@@ -72,17 +72,18 @@ Beaver stuck → CitizenUnstucker.TryUnstuckAndKeepDistrict [HarmonyPostfix]
 
 ## Known Pitfalls & Lessons Learned
 - **`ShorelineGroupId`** is obtained via `_navMeshGroupService.GetOrAddGroupId("Calloatti.BeaversForReal")` in `Load()`, not hardcoded. It's stored as a static property on BFRManager.
-- **Edge Hash** (`GetHash`) packs 6×10-bit coordinate components into a `long`. Each component is masked to 0x3FF (1024 range). If maps exceed 1024 in any axis, hash collisions will occur.
+- **Edge Dictionary Key** uses `ValueTuple<Vector3Int, Vector3Int>` (Upper, Lower) instead of bit-packed `long`. Removes 1024-coordinate limit from old `GetHash` approach.
 - **`_isStandableCache`** is a `bool[]` sized to `_nodeIdService.NumberOfNodes`. Must be re-checked and potentially re-allocated in `ProcessLocalizedChange` since node count can change between the initial scan and dynamic updates.
 - **Grid ↔ World conversion** — `NavigationCoordinateSystem.GridToWorld` / `WorldToGridInt`. Grid coords are `Vector3Int`, world is `Vector3`. Be aware that grid-Z maps to world-Y (Unity Y-up).
 - **`_stackableBlockService.IsFinishedStackableBlockAt`** is used in `IsStandableSurface` to check for artificial surfaces (levees, platforms) — this is what enables beavers to climb out of water onto player-built structures.
-- **CitizenUnstucker patch uses `Traverse`** to call `preferredDistrict.IsGloballyReachableFromPosition` (private method). The null check for `preferredDistrict` is critical — districtless beavers will crash without it.
+- **CitizenUnstucker patch** calls `preferredDistrict.IsGloballyReachableFromPosition` directly (private method, accessible via publicizer). The null check for `preferredDistrict` is critical — districtless beavers will crash without it.
 - **Dynamic update skip** — The first `ProcessRegularChanges` call after PostLoad is skipped (`_processRegularChangesFirstRun`) to avoid double-processing the initial state.
 - **Debug config** — stored in `simpleconfig.txt` as part of the SimpleConfig system. Debug visualization toggled via keybinding `Calloatti.BeaversForReal.KeyBind.Toggle`. Toggle state is NOT persisted.
 - **Localization** — Uses SimpleConfig locale keys (`Calloatti.Config.BeaversForReal.*`). Has per-locale CSV files in `Localizations/` for both main strings and SimpleConfig labels.
 - **Harmony patches** target specific game classes in `BFRPatches.cs` (single file, not split — following existing convention).
 - **Water contamination support** added in v2.1.0. The `ColumnContamination(Vector3Int)` overload respects vertical water column stacking (e.g., aqueducts).
 - **`ProcessWaterLevel` uses the `Vector3Int` overload** of `ColumnContamination` — not the `Vector2Int` one — to correctly handle multi-level water columns.
+- **Reflection removed** — `BFRPatches.cs` and `BFRNavMeshDebugger.cs` now use publicizer-direct field/method access instead of `Traverse`/`AccessTools`. All required assemblies (`Timberborn.GameDistricts`, `Timberborn.Navigation`) are publicized in `CommonModSettings.props`.
 
 ## Build & Deploy
 - Build via `dotnet build` in `Version-1.0/` or Visual Studio `.slnx`.

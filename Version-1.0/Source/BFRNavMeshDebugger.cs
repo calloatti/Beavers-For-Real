@@ -19,8 +19,6 @@ namespace Calloatti.BeaversForReal
     private Vector3Int _centerCoords;
     private NavMeshDrawer _vanillaDrawer;
 
-    // Cached reflections so we don't kill performance every frame
-    private Traverse _drawerTraverse;
     private NodeIdService _nodeIdService;
     private TerrainNavMeshGraph _terrainGraph;
     private RestrictedNodeMap _restrictedMap;
@@ -65,14 +63,13 @@ namespace Calloatti.BeaversForReal
     // Called by our Harmony Patch every time the Dev Tool toggle is ON
     public void QueueDrawRequest(NavMeshDrawer drawerInstance, Vector3Int centerCoords)
     {
-      // FIX: Re-cache reflections if the drawer instance changes (e.g., loading a new save)
-      if (_drawerTraverse == null || _vanillaDrawer != drawerInstance)
+      // FIX: Re-cache fields if the drawer instance changes (e.g., loading a new save)
+      if (_nodeIdService == null || _vanillaDrawer != drawerInstance)
       {
         _vanillaDrawer = drawerInstance;
-        _drawerTraverse = Traverse.Create(_vanillaDrawer);
-        _nodeIdService = _drawerTraverse.Field("_nodeIdService").GetValue<NodeIdService>();
-        _terrainGraph = _drawerTraverse.Field("_terrainNavMeshGraph").GetValue<TerrainNavMeshGraph>();
-        _restrictedMap = _drawerTraverse.Field("_restrictedNodeMap").GetValue<RestrictedNodeMap>();
+        _nodeIdService = _vanillaDrawer._nodeIdService;
+        _terrainGraph = _vanillaDrawer._terrainNavMeshGraph;
+        _restrictedMap = _vanillaDrawer._restrictedNodeMap;
       }
 
       _vanillaDrawer = drawerInstance;
@@ -86,7 +83,7 @@ namespace Calloatti.BeaversForReal
       _drawThisFrame = false; // Consume the request so it only draws for one frame
 
       // Grab the actively updated list of nodes from the vanilla drawer
-      HashSet<int> nodesWithNeighbors = _drawerTraverse.Field("_nodesWithNeighbors").GetValue<HashSet<int>>();
+      HashSet<int> nodesWithNeighbors = _vanillaDrawer._nodesWithNeighbors;
       if (nodesWithNeighbors == null) return;
 
       Vector3 centerWorld = NavigationCoordinateSystem.GridToWorld(_centerCoords);

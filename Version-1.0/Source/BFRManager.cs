@@ -31,7 +31,7 @@ namespace Calloatti.BeaversForReal
     private readonly IThreadSafeWaterMap _waterMap;
 
     private readonly List<BFREdge> _shorelines = new List<BFREdge>();
-    private readonly Dictionary<long, BFREdge> _shorelineDict = new Dictionary<long, BFREdge>();
+    private readonly Dictionary<(Vector3Int Upper, Vector3Int Lower), BFREdge> _shorelineDict = new Dictionary<(Vector3Int Upper, Vector3Int Lower), BFREdge>();
     private BFRMeshRenderer _visualizer;
 
     private readonly Vector3Int[] _cardinalDeltas = {

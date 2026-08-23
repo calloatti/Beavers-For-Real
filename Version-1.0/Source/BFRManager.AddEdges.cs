@@ -108,18 +108,18 @@ namespace Calloatti.BeaversForReal
             }
           }
 
-          // If we hit the void, or didn't find a valid drop-off
+// If we hit the void, or didn't find a valid drop-off
           if (lowerNodeId == -1) continue;
 
-          long hash = GetHash(upper, lower);
-          if (_shorelineDict.ContainsKey(hash)) continue;
+          var key = (upper, lower);
+          if (_shorelineDict.ContainsKey(key)) continue;
 
           // Create the edge unblocked for testing
           var newEdge = new BFREdge(upperNodeId, upper, lowerNodeId, lower) { IsBlockedByWater = true };
 
           if (IsLedgePhysicallyValid(newEdge))
           {
-            _shorelineDict.Add(hash, newEdge);
+            _shorelineDict.Add(key, newEdge);
             _shorelines.Add(newEdge);
 
             newEdge.EdgeDown = NavMeshEdge.CreateGrouped(newEdge.Upper, newEdge.Lower, ShorelineGroupId, false, 1.0f);
@@ -159,9 +159,7 @@ namespace Calloatti.BeaversForReal
           }
         }
       }
-      return true;
+return true;
     }
-
-    private long GetHash(Vector3Int u, Vector3Int l) => (((long)u.x & 0x3FF) << 50) | (((long)u.y & 0x3FF) << 40) | (((long)u.z & 0x3FF) << 30) | (((long)l.x & 0x3FF) << 20) | (((long)l.y & 0x3FF) << 10) | ((long)l.z & 0x3FF);
   }
 }

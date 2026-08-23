@@ -1,3 +1,6 @@
+* Game Version: 1.0.13.1 - Mod Version: 2.2.0
+- Removed reflection (publicizer-direct field/method access)
+- Fixed edge hash collisions (ValueTuple keys, no 1024 coordinate limit)
 * Game Version: 1.0.0.0 - Mod Version: 2.1.2
 - New shoreline edges now start blocked until first water check
 * Game Version: 1.0.0.0 - Mod Version: 2.1.1

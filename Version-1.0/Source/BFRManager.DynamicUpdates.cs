@@ -17,7 +17,7 @@ namespace Calloatti.BeaversForReal
     private static readonly HashSet<Vector3Int> _pendingUpdateCoordinates = new HashSet<Vector3Int>();
 
     // --- OPTIMIZATION: Memory Reuse ---
-    private readonly Dictionary<long, BFREdge> _thisEdgesAreOk = new Dictionary<long, BFREdge>();
+    private readonly Dictionary<(Vector3Int Upper, Vector3Int Lower), BFREdge> _thisEdgesAreOk = new Dictionary<(Vector3Int Upper, Vector3Int Lower), BFREdge>();
     private bool[] _isStandableCache;
     private readonly List<int> _potentialLedges = new List<int>();
 
@@ -115,7 +115,9 @@ namespace Calloatti.BeaversForReal
               for (int i = 0; i < neighbors.Count; i++)
               {
                 Vector3Int nCoords = _nodeIdService.IdToGrid(neighbors[i].Id);
-                if (!_shorelineDict.ContainsKey(GetHash(coords, nCoords)) && !_shorelineDict.ContainsKey(GetHash(nCoords, coords)))
+                var key1 = (coords, nCoords);
+                var key2 = (nCoords, coords);
+                if (!_shorelineDict.ContainsKey(key1) && !_shorelineDict.ContainsKey(key2))
                 {
                   vanillaCount++;
                 }
@@ -159,7 +161,9 @@ namespace Calloatti.BeaversForReal
             Vector3Int vNeighborCoords = _nodeIdService.IdToGrid(vanillaNeighbors[i].Id);
             if (vNeighborCoords.x == neighborXY.x && vNeighborCoords.y == neighborXY.y)
             {
-              if (_shorelineDict.ContainsKey(GetHash(upper, vNeighborCoords)) || _shorelineDict.ContainsKey(GetHash(vNeighborCoords, upper)))
+              var key1 = (upper, vNeighborCoords);
+              var key2 = (vNeighborCoords, upper);
+              if (_shorelineDict.ContainsKey(key1) || _shorelineDict.ContainsKey(key2))
               {
                 continue;
               }
@@ -175,14 +179,14 @@ namespace Calloatti.BeaversForReal
             int checkId = _nodeIdService.GridToId(checkCoords);
             if (_isStandableCache[checkId])
             {
-              long hash = GetHash(upper, checkCoords);
+              var key = (upper, checkCoords);
               var candidate = new BFREdge(upperNodeId, upper, checkId, checkCoords) { IsBlockedByWater = true };
               if (IsLedgePhysicallyValid(candidate))
               {
-                if (_shorelineDict.TryGetValue(hash, out var existing))
-                  _thisEdgesAreOk[hash] = existing;
+                if (_shorelineDict.TryGetValue(key, out var existing))
+                  _thisEdgesAreOk[key] = existing;
                 else
-                  _thisEdgesAreOk[hash] = candidate;
+                  _thisEdgesAreOk[key] = candidate;
               }
               break;
             }
@@ -200,10 +204,10 @@ namespace Calloatti.BeaversForReal
 
         if (upperIn && lowerIn)
         {
-          long hash = GetHash(edge.Upper, edge.Lower);
-          if (!_thisEdgesAreOk.ContainsKey(hash))
+          var key = (edge.Upper, edge.Lower);
+          if (!_thisEdgesAreOk.ContainsKey(key))
           {
-            _shorelineDict.Remove(hash);
+            _shorelineDict.Remove(key);
             _shorelines.RemoveAt(i);
             _navMeshService.RemoveEdge(edge.EdgeDown);
             _navMeshService.RemoveEdge(edge.EdgeUp);

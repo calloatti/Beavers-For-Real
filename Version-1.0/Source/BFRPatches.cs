@@ -57,8 +57,6 @@ namespace Calloatti.BeaversForReal
       Vector3 currentPos = citizen.Transform.position;
       Vector3Int gridPos = NavigationCoordinateSystem.WorldToGridInt(currentPos);
 
-      var isReachableMethod = Traverse.Create(preferredDistrict).Method("IsGloballyReachableFromPosition", new System.Type[] { typeof(Vector3) });
-
       for (int z = 0; gridPos.z + z < 32; z++)
       {
         for (int x = -1; x <= 1; x++)
@@ -68,7 +66,7 @@ namespace Calloatti.BeaversForReal
             Vector3Int checkGrid = new Vector3Int(gridPos.x + x, gridPos.y + y, gridPos.z + z);
             Vector3 checkWorld = NavigationCoordinateSystem.GridToWorld(checkGrid);
 
-            if (isReachableMethod.GetValue<bool>(checkWorld))
+            if (preferredDistrict.IsGloballyReachableFromPosition(checkWorld))
             {
               citizen.Transform.position = checkWorld;
               citizen.GetComponent<CharacterModel>().Position = checkWorld;
