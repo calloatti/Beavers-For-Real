@@ -1,0 +1,9 @@
+{
+  "Name": "Beavers For Real",
+  "Version": "2.2.1",
+  "Id": "Calloatti.BeaversForReal",
+  "MinimumGameVersion": "1.1.2.4",
+  "Description": "Allows beavers to naturally enter and exit water directly from riverbanks.",
+  "RequiredMods": [{"Id": "Harmony", "MinVersion": "2.4.1"}],
+  "OptionalMods": []
+}

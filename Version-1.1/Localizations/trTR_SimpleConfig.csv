@@ -1,0 +1,13 @@
+ID,Text,Comment
+Calloatti.SimpleConfig.ModSettings,"Mod Ayarları",
+Calloatti.SimpleConfig.SaveChanges,"Değişiklikleri Kaydet",
+Calloatti.SimpleConfig.ValidationFailed,"Doğrulama Başarısız!",
+Calloatti.SimpleConfig.Saved,"Kaydedildi!",
+Calloatti.SimpleConfig.Key,"Anahtar:",
+Calloatti.SimpleConfig.Default,"Varsayılan:",
+Calloatti.SimpleConfig.None,"Hiçbiri",
+Calloatti.SimpleConfig.Min,"Min:",
+Calloatti.SimpleConfig.Max,"Maks:",
+Calloatti.SimpleConfig.RequiresRestart,"[Yeniden Başlatma Gerekli]",
+Calloatti.SimpleConfig.RequiresReload,"[Yeniden Yükleme Gerekli]",
+Calloatti.SimpleConfig.CurrentValue,"Geçerli:",

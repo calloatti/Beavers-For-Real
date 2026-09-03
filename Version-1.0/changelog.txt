@@ -1,3 +1,5 @@
+* Game Version: 1.0.13.1 - Mod Version: 2.2.1
+- Updated due to 1.1.2.4 release
 * Game Version: 1.0.13.1 - Mod Version: 2.2.0
 - Removed reflection (publicizer-direct field/method access)
 - Fixed edge hash collisions (ValueTuple keys, no 1024 coordinate limit)

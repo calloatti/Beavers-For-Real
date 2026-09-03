@@ -1,0 +1,13 @@
+ID,Text,Comment
+Calloatti.SimpleConfig.ModSettings,"การตั้งค่า Mod",
+Calloatti.SimpleConfig.SaveChanges,"บันทึกการเปลี่ยนแปลง",
+Calloatti.SimpleConfig.ValidationFailed,"การตรวจสอบล้มเหลว!",
+Calloatti.SimpleConfig.Saved,"บันทึกแล้ว!",
+Calloatti.SimpleConfig.Key,"คีย์:",
+Calloatti.SimpleConfig.Default,"ค่าเริ่มต้น:",
+Calloatti.SimpleConfig.None,"ไม่มี",
+Calloatti.SimpleConfig.Min,"ต่ำสุด:",
+Calloatti.SimpleConfig.Max,"สูงสุด:",
+Calloatti.SimpleConfig.RequiresRestart,"[ต้องเริ่มใหม่]",
+Calloatti.SimpleConfig.RequiresReload,"[ต้องโหลดซ้ำ]",
+Calloatti.SimpleConfig.CurrentValue,"ปัจจุบัน:",
