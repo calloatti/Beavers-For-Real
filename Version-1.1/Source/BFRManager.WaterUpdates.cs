@@ -18,7 +18,7 @@ namespace Calloatti.BeaversForReal
       {
         var coords = new List<Vector3Int>(_pendingUpdateCoordinates);
         _pendingUpdateCoordinates.Clear();
-        ProcessLocalizedChange(coords);
+        ProcessLocalizedChangesBatched(coords);
       }
 
       // Process a batch of shorelines for water level updates
